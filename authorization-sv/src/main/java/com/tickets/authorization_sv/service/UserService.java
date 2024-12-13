@@ -1,5 +1,6 @@
 package com.tickets.authorization_sv.service;
 
+import com.tickets.authorization_sv.dto.UserDTO;
 import com.tickets.authorization_sv.entity.Role;
 import com.tickets.authorization_sv.entity.User;
 import com.tickets.authorization_sv.repository.UserRepository;
@@ -18,7 +19,7 @@ public class UserService {
 
     public ResponseEntity<?> registerUser(UserDTO userDTO) {
         User user = modelMapper.map(userDTO, User.class);
-
+/*
         switch (user.getRole()) {
             case OUTSIDE_USER:
                 user.setRole(Role.OUTSIDE_USER);
@@ -29,6 +30,7 @@ public class UserService {
             default:
                 user.setRole(Role.INSIDE_USER);
         }
+*/
 
         userRepository.save(user);
 
