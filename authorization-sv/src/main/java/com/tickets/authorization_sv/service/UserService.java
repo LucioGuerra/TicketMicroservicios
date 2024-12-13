@@ -5,6 +5,7 @@ import com.tickets.authorization_sv.entity.Role;
 import com.tickets.authorization_sv.entity.User;
 import com.tickets.authorization_sv.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
