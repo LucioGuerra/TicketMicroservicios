@@ -20,22 +20,9 @@ public class UserService {
 
     public ResponseEntity<?> registerUser(UserDTO userDTO) {
         User user = modelMapper.map(userDTO, User.class);
-/*
-        switch (user.getRole()) {
-            case OUTSIDE_USER:
-                user.setRole(Role.OUTSIDE_USER);
-                break;
-            case ADMIN:
-                user.setRole(Role.ADMIN);
-                break;
-            default:
-                user.setRole(Role.INSIDE_USER);
-        }
-*/
-
         userRepository.save(user);
 
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
 
 }
