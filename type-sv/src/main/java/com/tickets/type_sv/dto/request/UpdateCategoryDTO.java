@@ -4,4 +4,6 @@ import lombok.Data;
 
 @Data
 public class UpdateCategoryDTO {
+    private String description;
+    private Long typeId;
 }

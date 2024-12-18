@@ -1,35 +1,72 @@
 package com.tickets.type_sv.service;
 
 import com.tickets.type_sv.dto.request.TypeDTO;
+import com.tickets.type_sv.dto.request.UpdateTypeDTO;
+import com.tickets.type_sv.dto.response.GetTypeDTO;
+import com.tickets.type_sv.entity.Type;
+import com.tickets.type_sv.exception.TicketException;
 import com.tickets.type_sv.repository.TypeRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @AllArgsConstructor
 @Service
 public class TypeService {
 
     private final TypeRepository typeRepository;
+    private final ModelMapper modelMapper;
 
     public ResponseEntity<Void> createType(TypeDTO typeDTO) {
+        Type type = modelMapper.map(typeDTO, Type.class);
+        typeRepository.save(type);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    public ResponseEntity<Void> getTypeById(Long id) {
-        return ResponseEntity.status(HttpStatus.OK).build();
+    public ResponseEntity<GetTypeDTO> getTypeDTOById(Long id) {
+        Type type = typeRepository.findByIdAndNotDeleted(id).orElseThrow(() -> new EntityNotFoundException("Type not found with id: " + id));
+        GetTypeDTO typeDTO= modelMapper.map(type, GetTypeDTO.class);
+        return ResponseEntity.status(HttpStatus.OK).body(typeDTO);
     }
 
-    public ResponseEntity<Void> getAllTypes() {
-        return ResponseEntity.status(HttpStatus.OK).build();
+    public ResponseEntity<List<GetTypeDTO>> getAllTypes() {
+        List<Type> types = typeRepository.findAllAndNotDeleted();
+        List<GetTypeDTO> typesDTOs = types.stream().map(type -> modelMapper.map(type, GetTypeDTO.class)).toList();
+        return ResponseEntity.status(HttpStatus.OK).body(typesDTOs);
     }
 
-    public ResponseEntity<Void> updateType(Long id) {
-        return ResponseEntity.status(HttpStatus.OK).build();
+    public ResponseEntity<Void> updateType(Long id, UpdateTypeDTO typeDTO) {
+        Type type = typeRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Type not found with id: " + id));
+
+        if (typeDTO.getCode() != null) {
+            type.setCode(typeDTO.getCode());
+        }
+        if (typeDTO.getDescription() != null) {
+            type.setDescription(typeDTO.getDescription());
+        }
+
+        typeRepository.save(type);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     public ResponseEntity<Void> deleteType(Long id) {
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        Type type = typeRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Type not found with id: " + id));
+        if (type.getDeleted()){
+            throw new TicketException("TYPE_ALREADY_DELETED", "Type already deleted");
+        }
+
+        type.setDeleted(true);
+        typeRepository.save(type);
+
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    public Type getTypeById(Long id) {
+        return typeRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Type not found"));
     }
 }

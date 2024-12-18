@@ -4,4 +4,7 @@ import lombok.Data;
 
 @Data
 public class GetTypeDTO {
+    private Long id;
+    private String code;
+    private String description;
 }

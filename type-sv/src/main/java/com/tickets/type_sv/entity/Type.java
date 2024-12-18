@@ -30,6 +30,10 @@ public class Type {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
+    private Type() {
+        this.deleted = false;
+    }
+
 
     @PrePersist
     public void prePersist() {
