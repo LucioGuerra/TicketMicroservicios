@@ -24,13 +24,13 @@ public class Type {
     @Column(nullable = false)
     private Boolean deleted;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
-    @Column(name = "updated_at", nullable = false)
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    private Type() {
+    public Type() {
         this.deleted = false;
     }
 

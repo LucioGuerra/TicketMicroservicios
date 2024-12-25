@@ -4,14 +4,17 @@ import com.tickets.type_sv.dto.request.TypeDTO;
 import com.tickets.type_sv.dto.request.UpdateTypeDTO;
 import com.tickets.type_sv.dto.response.GetTypeDTO;
 import com.tickets.type_sv.entity.Type;
+import com.tickets.type_sv.event.DeleteCategoriesByTypeEvent;
 import com.tickets.type_sv.exception.TicketException;
 import com.tickets.type_sv.repository.TypeRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,6 +23,7 @@ import java.util.List;
 public class TypeService {
 
     private final TypeRepository typeRepository;
+    private final ApplicationEventPublisher eventPublisher;
     private final ModelMapper modelMapper;
 
     public ResponseEntity<Void> createType(TypeDTO typeDTO) {
@@ -54,12 +58,16 @@ public class TypeService {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @Transactional
     public ResponseEntity<Void> deleteType(Long id) {
-        Type type = typeRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Type not found with id: " + id));
+        Type type = typeRepository.findByIdAndNotDeleted(id).orElseThrow(() -> new EntityNotFoundException("Type not found with" +
+                " id: " + id));
         if (type.getDeleted()){
             throw new TicketException("TYPE_ALREADY_DELETED", "Type already deleted");
         }
 
+
+        eventPublisher.publishEvent(new DeleteCategoriesByTypeEvent(type.getId()));
         type.setDeleted(true);
         typeRepository.save(type);
 
