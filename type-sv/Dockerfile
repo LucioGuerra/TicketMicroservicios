@@ -4,7 +4,7 @@ FROM eclipse-temurin:17-jdk AS runtime
 WORKDIR /app
 
 # Exponer el puerto de la aplicación
-EXPOSE 8080
+EXPOSE 8081
 
 # Usamos el ENTRYPOINT para ejecutar el JAR que se montará como volumen
 ENTRYPOINT ["java", "-jar", "app.jar"]
