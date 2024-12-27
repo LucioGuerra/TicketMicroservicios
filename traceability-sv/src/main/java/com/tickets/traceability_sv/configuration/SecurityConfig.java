@@ -6,6 +6,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.security.web.SecurityFilterChain;
 
 import static org.springframework.security.config.Customizer.withDefaults;
@@ -25,5 +28,21 @@ public class SecurityConfig {
                         .jwt(withDefaults())
                 ).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .build();
+    }
+
+    @Bean
+    public JwtDecoder jwtDecoder() {
+        // Decodificador genérico que no valida la firma
+        return token -> {
+            try {
+                // Decodifica el token JWT sin validarlo
+                return Jwt.withTokenValue(token)
+                        .header("alg", "none")
+                        .claim("sub", "generic-user") // Reclamos genéricos
+                        .build();
+            } catch (Exception e) {
+                throw new JwtException("Invalid JWT token", e);
+            }
+        };
     }
 }

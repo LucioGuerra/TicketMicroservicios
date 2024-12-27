@@ -7,6 +7,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
+@Entity
 public class RequirementTraceability {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
