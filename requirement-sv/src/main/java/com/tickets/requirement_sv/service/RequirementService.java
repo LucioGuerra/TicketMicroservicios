@@ -3,8 +3,10 @@ package com.tickets.requirement_sv.service;
 import com.tickets.requirement_sv.entity.Requirement;
 import com.tickets.requirement_sv.external.model.Type;
 import com.tickets.requirement_sv.repository.RequirementRepository;
+import com.tickets.requirement_sv.repository.TypeRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -14,6 +16,7 @@ import java.time.LocalDate;
 public class RequirementService {
 
     private final RequirementRepository requirementRepository;
+    private final TypeRepository typeRepository;
 
     public void createRequirement(Requirement requirement) {
         requirementRepository.save(requirement);
@@ -23,8 +26,9 @@ public class RequirementService {
         return requirementRepository.findById(id).orElse(null);
     }
 
-    public void getAllRequirements() {
-        requirementRepository.findAll();
+    public ResponseEntity<Type> getAllRequirements() {
+        Type type = typeRepository.getTypeById("1");
+        return ResponseEntity.ok(type);
     }
 
     public void updateRequirement(Requirement requirement) {

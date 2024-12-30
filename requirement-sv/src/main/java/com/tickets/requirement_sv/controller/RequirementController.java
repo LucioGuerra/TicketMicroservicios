@@ -1,5 +1,6 @@
 package com.tickets.requirement_sv.controller;
 
+import com.tickets.requirement_sv.external.model.Type;
 import com.tickets.requirement_sv.service.RequirementService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -7,20 +8,20 @@ import org.springframework.web.bind.annotation.*;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/requirement")
+@RequestMapping("/public/requirements")
 public class RequirementController {
 
     private final RequirementService requirementService;
 
-    @PostMapping
+  /*  @PostMapping
     public ResponseEntity<Void> createRequirement() {
         return requirementService.createRequirement();
-    }
+    }*/
 
     @GetMapping
-    public ResponseEntity<Void> getAllRequirements() {
+    public ResponseEntity<Type> getAllRequirements() {
         return requirementService.getAllRequirements();
-    }
+    }/*
 
     @GetMapping("/{id}")
     public ResponseEntity<Void> getRequirementById() {
@@ -35,5 +36,5 @@ public class RequirementController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteRequirement() {
         return requirementService.deleteRequirement();
-    }
+    }*/
 }
