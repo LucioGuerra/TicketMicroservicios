@@ -26,9 +26,6 @@ public class RequirementDTO {
     @NotNull(message = "Creator must not be null")
     private Long creatorId;
 
-    @NotNull(message = "Assignee must not be null")
-    private Long assigneeId;
-
     @NotNull(message = "Category must not be null")
     private Long categoryId;
 
@@ -36,7 +33,6 @@ public class RequirementDTO {
     private Long typeId;
 
     @NotNull(message = "Priority must not be null")
-    @NotBlank(message = "Priority must not be blank")
     private Priority priority;
 
     private HashSet<Long> requirements;

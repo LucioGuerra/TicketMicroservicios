@@ -42,4 +42,9 @@ public class TypeController {
     public ResponseEntity<Void> deleteType(@PathVariable Long id) {
         return typeService.deleteType(id);
     }
+
+    @GetMapping("/validate/{id}")
+    public ResponseEntity<Boolean> validateType(@PathVariable Long id) {
+        return typeService.validateType(id);
+    }
 }

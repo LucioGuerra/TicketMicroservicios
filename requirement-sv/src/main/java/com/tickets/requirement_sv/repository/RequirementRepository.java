@@ -16,6 +16,6 @@ public interface RequirementRepository extends JpaRepository<Requirement, Long> 
 
     List<Requirement> findAllByIsDeletedFalse();
 
-    @Query("SELECT r FROM Requirement r WHERE r.id IN :ids AND r.deleted = false")
+    @Query("SELECT r FROM Requirement r WHERE r.id IN :ids AND r.isDeleted = false")
     HashSet<Requirement> findAllByIdsAndNotDeleted(@Param("ids") HashSet<Long> ids);
 }

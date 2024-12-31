@@ -4,7 +4,10 @@ import com.tickets.requirement_sv.dto.GetRequirementDTO;
 import com.tickets.requirement_sv.dto.RequirementDTO;
 import com.tickets.requirement_sv.dto.UpdateRequirementDTO;
 import com.tickets.requirement_sv.entity.Requirement;
+import com.tickets.requirement_sv.exception.TicketException;
+import com.tickets.requirement_sv.external.model.Category;
 import com.tickets.requirement_sv.external.model.Type;
+import com.tickets.requirement_sv.repository.CategoryRepository;
 import com.tickets.requirement_sv.repository.RequirementRepository;
 import com.tickets.requirement_sv.repository.TypeRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -24,26 +27,51 @@ import java.util.List;
 public class RequirementService {
 
     private final RequirementRepository requirementRepository;
-    private final TypeRepository typeRepository;
+    private final CategoryRepository categoryRepository;
     private final ModelMapper modelMapper;
+    private final TypeRepository typeRepository;
 
     public ResponseEntity<Void> createRequirement(RequirementDTO requirementDTO) {
         Requirement requirement = modelMapper.map(requirementDTO, Requirement.class);
 
-        if(!requirementDTO.getRequirements().isEmpty()){
+        if(!requirement.getRequirements().isEmpty()){
             requirement.setRequirements(requirementRepository.findAllByIdsAndNotDeleted(requirementDTO.getRequirements()));
         }
 
-        Type type = typeRepository.getTypeById(requirementDTO.getTypeId().toString());
+        Category category = categoryRepository.getCategoryById(requirementDTO.getCategoryId());
+
+        if(category.getType().getId() != requirementDTO.getTypeId()){
+            throw new TicketException("TYPE_NOT_MATCH_CATEGORY", "The type does not match the category");
+        }
+        //todo: Validar los id de user
+
+        requirement.setCode(this.generateCode(category.getType().getCode()));
+
 
         requirementRepository.save(requirement);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     public ResponseEntity<GetRequirementDTO> getRequirementDTOById(Long id) {
         Requirement requirement = this.getRequirementByIdAndNotDeleted(id);
-        GetRequirementDTO getRequirementDTO = modelMapper.map(requirement, GetRequirementDTO.class);
-        return ResponseEntity.ok(getRequirementDTO);
+
+        System.err.println(requirement.toString());
+
+        GetRequirementDTO requirementDTO = modelMapper.map(requirement, GetRequirementDTO.class);
+
+        requirementDTO.setCategory(categoryRepository.getCategoryById(requirement.getCategoryId()));
+        requirementDTO.setType(typeRepository.getTypeById(requirement.getTypeId()));
+        //todo: setear usuario creador
+
+        if(requirement.getAssigneeId() != null){
+            //todo: setear el usuario asignado
+        }
+
+        if(!requirement.getRequirements().isEmpty()){
+            //todo: setear los requerimientos relacionados
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(requirementDTO);
     }
 
     public ResponseEntity<List<GetRequirementDTO>> getAllRequirements() {

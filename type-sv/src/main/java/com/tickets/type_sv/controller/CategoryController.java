@@ -42,4 +42,9 @@ public class CategoryController {
     public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
         return categoryService.deleteCategory(id);
     }
+
+    @GetMapping("/validate/{id}")
+    public ResponseEntity<Boolean> validateCategory(@PathVariable Long id) {
+        return categoryService.validateCategory(id);
+    }
 }

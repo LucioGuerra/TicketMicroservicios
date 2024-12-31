@@ -2,10 +2,10 @@ package com.tickets.requirement_sv.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import org.hibernate.mapping.Set;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Entity
@@ -23,8 +23,11 @@ public class Requirement {
     @Column(length = 5000, nullable = false)
     private String description;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private State state;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Priority priority;
 
@@ -41,7 +44,7 @@ public class Requirement {
     private Long typeId;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    private HashSet<Requirement> requirements;
+    private Set<Requirement> requirements;
 
     @Column(name = "is_deleted", nullable = false)
     private Boolean isDeleted;
@@ -56,6 +59,7 @@ public class Requirement {
     private Requirement() {
         this.state = State.OPEN;
         this.isDeleted = false;
+        this.requirements = new HashSet<>();
     }
 
 
