@@ -7,12 +7,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
-@FeignClient(name = "type-sv", url = "http://localhost:8081/public")
+@FeignClient(name = "type-sv", url = "http://localhost:8081/public/types")
 public interface TypeRepository {
 
-    @GetMapping("/types/{id}")
+    @GetMapping("/{id}")
     Type getTypeById(@PathVariable String id);
 
-    @GetMapping("/types")
+    @GetMapping
     List<Type> getAllTypes();
 }

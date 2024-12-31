@@ -20,7 +20,7 @@ public class Requirement {
     @Column(nullable = false, unique = true, length = 19)
     private String code;
 
-    @Column(length = 5000)
+    @Column(length = 5000, nullable = false)
     private String description;
 
     private State state;
@@ -43,6 +43,9 @@ public class Requirement {
     @ManyToMany(fetch = FetchType.LAZY)
     private HashSet<Requirement> requirements;
 
+    @Column(name = "is_deleted", nullable = false)
+    private Boolean isDeleted;
+
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
@@ -52,6 +55,7 @@ public class Requirement {
 
     private Requirement() {
         this.state = State.OPEN;
+        this.isDeleted = false;
     }
 
 
