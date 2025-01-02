@@ -3,7 +3,9 @@ package com.tickets.requirement_sv.service;
 import com.tickets.requirement_sv.dto.GetRequirementDTO;
 import com.tickets.requirement_sv.dto.RequirementDTO;
 import com.tickets.requirement_sv.dto.UpdateRequirementDTO;
+import com.tickets.requirement_sv.entity.Priority;
 import com.tickets.requirement_sv.entity.Requirement;
+import com.tickets.requirement_sv.entity.State;
 import com.tickets.requirement_sv.exception.TicketException;
 import com.tickets.requirement_sv.external.model.Category;
 import com.tickets.requirement_sv.external.model.Type;
@@ -12,7 +14,10 @@ import com.tickets.requirement_sv.repository.RequirementRepository;
 import com.tickets.requirement_sv.repository.TypeRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
+import org.hibernate.query.Page;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -45,6 +50,8 @@ public class RequirementService {
         }
         //todo: Validar los id de user
 
+        //todo: mandar evento por kafka para crear el requerimiento
+
         requirement.setCode(this.generateCode(category.getType().getCode()));
 
 
@@ -74,11 +81,13 @@ public class RequirementService {
         return ResponseEntity.status(HttpStatus.OK).body(requirementDTO);
     }
 
-    public ResponseEntity<List<GetRequirementDTO>> getAllRequirements() {
-        List<Requirement> requirements = requirementRepository.findAllByIsDeletedFalse();
-        List<GetRequirementDTO> getRequirementDTOS = requirements.stream()
-                .map(requirement -> modelMapper.map(requirement, GetRequirementDTO.class))
-                .toList();
+    public ResponseEntity<Page<GetRequirementDTO>> getAllRequirements(String subject, Long typeId, Long creatorId,
+                                                                      Long assigneeId, State state, Priority priority,
+                                                                      Pageable pageable) {
+
+        Specification<Requirement> specification = Specification.where(n);
+
+
         return ResponseEntity.status(HttpStatus.OK).body(getRequirementDTOS);
     }
 
