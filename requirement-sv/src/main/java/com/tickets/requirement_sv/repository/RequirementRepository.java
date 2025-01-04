@@ -15,8 +15,6 @@ import java.util.Optional;
 public interface RequirementRepository extends JpaRepository<Requirement, Long>, JpaSpecificationExecutor<Requirement> {
     Optional<Requirement> findByIdAndIsDeletedFalse(Long id);
 
-    List<Requirement> findAllByIsDeletedFalse();
-
     @Query("SELECT r FROM Requirement r WHERE r.id IN :ids AND r.isDeleted = false")
     HashSet<Requirement> findAllByIdsAndNotDeleted(@Param("ids") HashSet<Long> ids);
 }

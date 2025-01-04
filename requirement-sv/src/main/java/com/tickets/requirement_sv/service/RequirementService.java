@@ -12,9 +12,10 @@ import com.tickets.requirement_sv.external.model.Type;
 import com.tickets.requirement_sv.repository.CategoryRepository;
 import com.tickets.requirement_sv.repository.RequirementRepository;
 import com.tickets.requirement_sv.repository.TypeRepository;
+import com.tickets.requirement_sv.specification.RequirementSpecification;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
-import org.hibernate.query.Page;
+import org.springframework.data.domain.Page;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -85,15 +86,43 @@ public class RequirementService {
                                                                       Long assigneeId, State state, Priority priority,
                                                                       Pageable pageable) {
 
-        Specification<Requirement> specification = Specification.where(n);
+        Specification<Requirement> specification = Specification.where(RequirementSpecification.hasDeleted(false))
+                .and(RequirementSpecification.hasSubject(subject))
+                .and(RequirementSpecification.hasType(typeId))
+                .and(RequirementSpecification.hasCreatorId(creatorId))
+                .and(RequirementSpecification.hasAssigneeId(assigneeId))
+                .and(RequirementSpecification.hasState(state))
+                .and(RequirementSpecification.hasPriority(priority));
 
 
-        return ResponseEntity.status(HttpStatus.OK).body(getRequirementDTOS);
+        Page<Requirement> requirements = requirementRepository.findAll(specification, pageable);
+
+        if (requirements.isEmpty()) {
+            throw new EntityNotFoundException("No requirements found with the given filters");
+        }
+
+        Page<GetRequirementDTO> requirementDTOs = requirements.map(requirement -> modelMapper.map(requirement,
+                GetRequirementDTO.class));
+
+
+        return ResponseEntity.status(HttpStatus.OK).body(requirementDTOs);
     }
 
     public ResponseEntity<Void> updateRequirement(UpdateRequirementDTO updateRequirementDTO, Long id) {
         Requirement requirementToUpdate = this.getRequirementByIdAndNotDeleted(id);
-        //todo: aplicar camvios de updateRequirementDTO a requirementToUpdate
+
+        if(updateRequirementDTO.getSubject() != null){
+            requirementToUpdate.setSubject(updateRequirementDTO.getSubject());
+        }
+        if(updateRequirementDTO.getDescription() != null){
+            requirementToUpdate.setDescription(updateRequirementDTO.getDescription());
+        }
+        if(updateRequirementDTO.getPriority() != null){
+            requirementToUpdate.setPriority(updateRequirementDTO.getPriority());
+        }
+        if(updateRequirementDTO.getRequirements() != null){
+            requirementToUpdate.setRequirements(requirementRepository.findAllByIdsAndNotDeleted(updateRequirementDTO.getRequirements()));
+        }
 
         requirementRepository.save(requirementToUpdate);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -105,6 +134,41 @@ public class RequirementService {
         requirementRepository.save(requirement);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
+    public ResponseEntity<Void> assignRequirement(Long id, Long assigneeId) {
+        Requirement requirement = this.getRequirementByIdAndNotDeleted(id);
+
+        //todo: Validar que el usuario exista y sea un usuario interno
+
+        if (requirement.getState() == State.CLOSED) {
+            throw new TicketException("REQUIREMENT_ALREADY_CLOSED", "The requirement is already closed");
+        }
+        if (requirement.getState() == State.ASSIGNED) {
+            throw new TicketException("REQUIREMENT_ALREADY_HAS_ASSIGNED", "The requirement is already assigned");
+        }
+
+        requirement.setAssigneeId(assigneeId);
+        requirement.setState(State.ASSIGNED);
+        //todo: mandar evento por kafka para asignar el requerimiento
+        requirementRepository.save(requirement);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    public ResponseEntity<Void> closeRequirement(Long id) {
+        Requirement requirement = this.getRequirementByIdAndNotDeleted(id);
+
+        if (requirement.getState() == State.CLOSED) {
+            throw new TicketException("REQUIREMENT_ALREADY_CLOSED", "The requirement is already closed");
+        }
+
+        requirement.setState(State.CLOSED);
+        //todo: mandar evento por kafka para cerrar el requerimiento
+        requirementRepository.save(requirement);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
 
     private Requirement getRequirementByIdAndNotDeleted(Long id) {
         return requirementRepository.findByIdAndIsDeletedFalse(id).orElseThrow(() -> new EntityNotFoundException(

@@ -8,7 +8,7 @@ import com.tickets.requirement_sv.entity.State;
 import com.tickets.requirement_sv.service.RequirementService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.hibernate.query.Page;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -46,6 +46,7 @@ public class RequirementController {
         return requirementService.getRequirementDTOById(id);
     }
 
+
     @PatchMapping("/{id}")
     public ResponseEntity<Void> updateRequirement(@RequestBody @Valid UpdateRequirementDTO requirementDTO,
                                                   @PathVariable Long id) {
@@ -55,5 +56,15 @@ public class RequirementController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteRequirement(@PathVariable Long id) {
        return requirementService.deleteRequirement(id);
+    }
+
+    @PatchMapping("/{id}/assign")
+    public ResponseEntity<Void> assignRequirement(@PathVariable Long id, @RequestParam Long assigneeId) {
+        return requirementService.assignRequirement(id, assigneeId);
+    }
+
+    @PatchMapping("/{id}/close")
+    public ResponseEntity<Void> closeRequirement(@PathVariable Long id) {
+        return requirementService.closeRequirement(id);
     }
 }
