@@ -46,7 +46,6 @@ public class RequirementController {
         return requirementService.getRequirementDTOById(id);
     }
 
-
     @PatchMapping("/{id}")
     public ResponseEntity<Void> updateRequirement(@RequestBody @Valid UpdateRequirementDTO requirementDTO,
                                                   @PathVariable Long id) {
