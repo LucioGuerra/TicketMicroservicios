@@ -15,10 +15,6 @@ public class RequirementDTO {
     @NotBlank(message = "Subject must not be blank")
     private String subject;
 
-    @Size(min = 19, max = 19, message = "Code must be 19 characters")
-    @NotBlank(message = "Code must not be blank")
-    private String code;
-
     @Size(min = 1, max = 5000, message = "Description must be between 1 and 5000 characters")
     @NotBlank(message = "Description must not be blank")
     private String description;

@@ -6,6 +6,8 @@ import com.tickets.requirement_sv.dto.UpdateRequirementDTO;
 import com.tickets.requirement_sv.entity.Priority;
 import com.tickets.requirement_sv.entity.Requirement;
 import com.tickets.requirement_sv.entity.State;
+import com.tickets.requirement_sv.event.Action;
+import com.tickets.requirement_sv.event.RequirementTraceabilityEvent;
 import com.tickets.requirement_sv.exception.TicketException;
 import com.tickets.requirement_sv.external.model.Category;
 import com.tickets.requirement_sv.external.model.Type;
@@ -21,9 +23,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -36,6 +40,7 @@ public class RequirementService {
     private final CategoryRepository categoryRepository;
     private final ModelMapper modelMapper;
     private final TypeRepository typeRepository;
+    private final KafkaTemplate<String, RequirementTraceabilityEvent> kafkaTemplate;
 
     public ResponseEntity<Void> createRequirement(RequirementDTO requirementDTO) {
         Requirement requirement = modelMapper.map(requirementDTO, Requirement.class);
@@ -49,12 +54,19 @@ public class RequirementService {
         if(category.getType().getId() != requirementDTO.getTypeId()){
             throw new TicketException("TYPE_NOT_MATCH_CATEGORY", "The type does not match the category");
         }
-        //todo: Validar los id de user
+        //todo: Validar el id del user creador y traer su email
+        String email = "Lfuere@example.com";
 
-        //todo: mandar evento por kafka para crear el requerimiento
 
         requirement.setCode(this.generateCode(category.getType().getCode()));
 
+        RequirementTraceabilityEvent event = new RequirementTraceabilityEvent(
+                Action.CREATE,
+                requirement.getCode(),
+                requirement.getCreatorId(),
+                email
+        );
+        kafkaTemplate.send("requirement-traceability", event);
 
         requirementRepository.save(requirement);
         return ResponseEntity.status(HttpStatus.CREATED).build();
