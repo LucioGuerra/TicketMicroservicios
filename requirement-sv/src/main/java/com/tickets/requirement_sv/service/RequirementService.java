@@ -60,16 +60,15 @@ public class RequirementService {
 
         requirement.setCode(this.generateCode(category.getType().getCode()));
 
-        RequirementTraceabilityEvent event = new RequirementTraceabilityEvent(
-                Action.CREATE,
-                requirement.getCode(),
-                requirement.getCreatorId(),
-                email
-        );
-        kafkaTemplate.send("requirement-traceability", event);
+        sendRequirementTraceabilityEvent(Action.CREATE, requirement.getCode(), requirement.getCreatorId(), email);
 
         requirementRepository.save(requirement);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    private void sendRequirementTraceabilityEvent(Action action, String code, Long userId, String userEmail) {
+        RequirementTraceabilityEvent event = new RequirementTraceabilityEvent(action, code, userId, userEmail);
+        kafkaTemplate.send("requirement-traceability", event);
     }
 
     public ResponseEntity<GetRequirementDTO> getRequirementDTOById(Long id) {
@@ -161,7 +160,8 @@ public class RequirementService {
 
         requirement.setAssigneeId(assigneeId);
         requirement.setState(State.ASSIGNED);
-        //todo: mandar evento por kafka para asignar el requerimiento
+        this.sendRequirementTraceabilityEvent(Action.ASSIGN, requirement.getCode(), requirement.getAssigneeId(),
+                "ejemplo@ejemplo.com");
         requirementRepository.save(requirement);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -175,7 +175,9 @@ public class RequirementService {
         }
 
         requirement.setState(State.CLOSED);
-        //todo: mandar evento por kafka para cerrar el requerimiento
+        //todo: Modificar la base de datos de traceability para que guarde las enum como un string
+        this.sendRequirementTraceabilityEvent(Action.CLOSE, requirement.getCode(), requirement.getAssigneeId(),
+                "ejemplo@ejemplo.com");
         requirementRepository.save(requirement);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
