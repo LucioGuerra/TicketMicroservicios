@@ -25,6 +25,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -41,8 +42,9 @@ public class RequirementService {
     private final ModelMapper modelMapper;
     private final TypeRepository typeRepository;
     private final KafkaTemplate<String, RequirementTraceabilityEvent> kafkaTemplate;
+    private final FileService fileService;
 
-    public ResponseEntity<Void> createRequirement(RequirementDTO requirementDTO) {
+    public ResponseEntity<Void> createRequirement(RequirementDTO requirementDTO, List<MultipartFile> files) {
         Requirement requirement = modelMapper.map(requirementDTO, Requirement.class);
 
         if(!requirement.getRequirements().isEmpty()){
@@ -51,7 +53,7 @@ public class RequirementService {
 
         Category category = categoryRepository.getCategoryById(requirementDTO.getCategoryId());
 
-        if(category.getType().getId() != requirementDTO.getTypeId()){
+        if(!category.getType().getId().equals(requirementDTO.getTypeId())){
             throw new TicketException("TYPE_NOT_MATCH_CATEGORY", "The type does not match the category");
         }
         //todo: Validar el id del user creador y traer su email
@@ -60,8 +62,9 @@ public class RequirementService {
 
         requirement.setCode(this.generateCode(category.getType().getCode()));
 
-        sendRequirementTraceabilityEvent(Action.CREATE, requirement.getCode(), requirement.getCreatorId(), email);
+        List<String> sanitizedFiles = fileService.uploadFile(files);
 
+        this.sendRequirementTraceabilityEvent(Action.CREATE, requirement.getCode(), requirement.getCreatorId(), email);
         requirementRepository.save(requirement);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

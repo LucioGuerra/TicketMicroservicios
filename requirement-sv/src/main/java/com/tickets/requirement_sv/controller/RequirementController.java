@@ -29,7 +29,7 @@ public class RequirementController {
 
    @PostMapping
     public ResponseEntity<Void> createRequirement(@RequestPart("requirement") @Valid RequirementDTO requirementDTO,
-                                                  @RequestPart(value = "files", required = false) @MaxFileListSize List<MultipartFile> files) {
+                                                  @RequestPart(value = "files", required = false) @MaxFileListSize(max = 5) List<MultipartFile> files) {
         return requirementService.createRequirement(requirementDTO, files);
     }
 
