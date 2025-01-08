@@ -1,8 +1,11 @@
 package com.tickets.requirement_sv.service;
 
 import com.tickets.requirement_sv.exception.TicketException;
+import io.minio.GetPresignedObjectUrlArgs;
 import io.minio.MinioClient;
 import io.minio.PutObjectArgs;
+import io.minio.RemoveObjectArgs;
+import io.minio.http.Method;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -56,20 +60,26 @@ public class FileService {
         return fileNames;
     }
 
-    public void deleteFile(String bucketName, String fileName) {
-        try {
-            minioClient.removeObject(bucketName, fileName);
-        } catch (Exception e) {
-            throw new RuntimeException("Error deleting file from Minio", e);
-        }
+    @SneakyThrows
+    public String downloadFile(String fileName) {
+        return minioClient.getPresignedObjectUrl(
+                GetPresignedObjectUrlArgs.builder()
+                        .method(Method.GET)
+                        .bucket(bucketName)
+                        .object(fileName)
+                        .expiry(60 * 60)
+                        .build()
+        );
     }
 
-    public void downloadFile(String bucketName, String fileName, String filePath) {
-        try {
-            minioClient.downloadObject(bucketName, fileName, filePath);
-        } catch (Exception e) {
-            throw new RuntimeException("Error downloading file from Minio", e);
-        }
+    @SneakyThrows
+    public void deleteFile(String bucketName, String fileName) {
+        minioClient.removeObject(
+                RemoveObjectArgs.builder()
+                        .bucket(bucketName)
+                        .object(fileName)
+                        .build()
+        );
     }
 
     private String getSanitizeFileName(MultipartFile file) {

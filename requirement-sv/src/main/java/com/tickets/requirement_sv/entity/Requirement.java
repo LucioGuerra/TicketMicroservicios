@@ -5,6 +5,7 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -30,6 +31,9 @@ public class Requirement {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Priority priority;
+
+    @ElementCollection
+    private List<String> files;
 
     @Column(name = "creator_id", nullable = false)
     private Long creatorId;

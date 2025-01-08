@@ -44,6 +44,7 @@ public class RequirementService {
     private final KafkaTemplate<String, RequirementTraceabilityEvent> kafkaTemplate;
     private final FileService fileService;
 
+
     public ResponseEntity<Void> createRequirement(RequirementDTO requirementDTO, List<MultipartFile> files) {
         Requirement requirement = modelMapper.map(requirementDTO, Requirement.class);
 
@@ -63,6 +64,7 @@ public class RequirementService {
         requirement.setCode(this.generateCode(category.getType().getCode()));
 
         List<String> sanitizedFiles = fileService.uploadFile(files);
+        requirement.setFiles(sanitizedFiles);
 
         this.sendRequirementTraceabilityEvent(Action.CREATE, requirement.getCode(), requirement.getCreatorId(), email);
         requirementRepository.save(requirement);
