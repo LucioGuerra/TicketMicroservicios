@@ -71,4 +71,7 @@ public class RequirementController {
     public ResponseEntity<Void> closeRequirement(@PathVariable Long id) {
         return requirementService.closeRequirement(id);
     }
+
+    //todo: endpoint para eliminar un archivo concreto
+    //todo: endpoint para cargar un solo arvhivo
 }

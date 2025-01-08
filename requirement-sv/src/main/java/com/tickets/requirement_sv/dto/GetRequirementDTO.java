@@ -8,6 +8,7 @@ import com.tickets.requirement_sv.external.model.User;
 import lombok.Data;
 
 import java.util.HashSet;
+import java.util.List;
 
 @Data
 public class GetRequirementDTO {
@@ -22,4 +23,5 @@ public class GetRequirementDTO {
     private Category category;
     private Type type;
     private HashSet<GetRequirementDTO> requirements;
+    private List<String> files;
 }

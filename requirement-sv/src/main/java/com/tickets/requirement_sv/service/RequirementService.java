@@ -63,7 +63,7 @@ public class RequirementService {
 
         requirement.setCode(this.generateCode(category.getType().getCode()));
 
-        List<String> sanitizedFiles = fileService.uploadFile(files);
+        List<String> sanitizedFiles = fileService.uploadFiles(files);
         requirement.setFiles(sanitizedFiles);
 
         this.sendRequirementTraceabilityEvent(Action.CREATE, requirement.getCode(), requirement.getCreatorId(), email);
@@ -93,6 +93,14 @@ public class RequirementService {
 
         if(!requirement.getRequirements().isEmpty()){
             //todo: setear los requerimientos relacionados
+        }
+
+        if (!requirement.getFiles().isEmpty()) {
+            List<String> downloadUrls = new ArrayList<>();
+            for (String file : requirement.getFiles()) {
+                downloadUrls.add(fileService.downloadFile(file));
+            }
+            requirementDTO.setFiles(downloadUrls);
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(requirementDTO);

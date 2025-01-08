@@ -36,7 +36,7 @@ public class FileService {
     );
 
     @SneakyThrows
-    public List<String> uploadFile(List<MultipartFile> files) {
+    public List<String> uploadFiles(List<MultipartFile> files) {
         List<String> fileNames = new ArrayList<>();
         for (MultipartFile file : files) {
             if (!allowFiles.contains(file.getContentType())) {
@@ -73,7 +73,7 @@ public class FileService {
     }
 
     @SneakyThrows
-    public void deleteFile(String bucketName, String fileName) {
+    public void deleteFile( String fileName) {
         minioClient.removeObject(
                 RemoveObjectArgs.builder()
                         .bucket(bucketName)
