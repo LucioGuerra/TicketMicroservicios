@@ -183,6 +183,9 @@ public class RequirementService {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    //todo: Implementar el endpoint y funcion para poder manejar los comentarios
+    //todo: Implementar los comentarios
+
 
     private Requirement getRequirementByIdAndNotDeleted(Long id) {
         return requirementRepository.findByIdAndIsDeletedFalse(id).orElseThrow(() -> new EntityNotFoundException(

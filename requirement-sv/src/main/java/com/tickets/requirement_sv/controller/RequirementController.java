@@ -1,5 +1,6 @@
 package com.tickets.requirement_sv.controller;
 
+import com.tickets.requirement_sv.Annotation.MaxFileListSize;
 import com.tickets.requirement_sv.dto.GetRequirementDTO;
 import com.tickets.requirement_sv.dto.RequirementDTO;
 import com.tickets.requirement_sv.dto.UpdateRequirementDTO;
@@ -14,6 +15,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 
 @AllArgsConstructor
@@ -24,8 +28,9 @@ public class RequirementController {
     private final RequirementService requirementService;
 
    @PostMapping
-    public ResponseEntity<Void> createRequirement(@RequestBody @Valid RequirementDTO requirementDTO) {
-        return requirementService.createRequirement(requirementDTO);
+    public ResponseEntity<Void> createRequirement(@RequestPart("requirement") @Valid RequirementDTO requirementDTO,
+                                                  @RequestPart(value = "files", required = false) @MaxFileListSize List<MultipartFile> files) {
+        return requirementService.createRequirement(requirementDTO, files);
     }
 
     @GetMapping
