@@ -22,6 +22,7 @@ public class GetRequirementDTO {
     private User assignee;
     private Category category;
     private Type type;
-    private HashSet<GetRequirementDTO> requirements;
+    private HashSet<GetRequirementDTO> requirements; //todo: revisar si debe ser este dto o uno mas acotado para ser
+                                                        // mas escalable tambien que get all requiremets
     private List<String> files;
 }

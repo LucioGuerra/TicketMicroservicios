@@ -92,7 +92,11 @@ public class RequirementService {
         }
 
         if(!requirement.getRequirements().isEmpty()){
-            //todo: setear los requerimientos relacionados
+            HashSet<GetRequirementDTO> requirements = new HashSet<>();
+            for(Requirement req : requirement.getRequirements()){
+                requirements.add(modelMapper.map(req, GetRequirementDTO.class));
+            }
+            requirementDTO.setRequirements(requirements);
         }
 
         if (!requirement.getFiles().isEmpty()) {
@@ -231,11 +235,6 @@ public class RequirementService {
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
-
-
-
-    //todo: Implementar el endpoint y funcion para poder manejar los comentarios
-    //todo: Implementar los comentarios
 
 
     private Requirement getRequirementByIdAndNotDeleted(Long id) {
