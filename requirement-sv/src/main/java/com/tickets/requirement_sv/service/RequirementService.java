@@ -196,6 +196,44 @@ public class RequirementService {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    public ResponseEntity<Void> deleteFile(Long id, List<String> fileNames) {
+        Requirement requirement = this.getRequirementByIdAndNotDeleted(id);
+
+        if (requirement.getFiles().isEmpty()) {
+            throw new TicketException("REQUIREMENT_HAS_NO_FILES", "The requirement has no files");
+        }
+
+        for (String fileName : fileNames) {
+            if (!requirement.getFiles().contains(fileName)) {
+                throw new TicketException("FILE_NOT_FOUND", "The file was not found in the requirement");
+            }
+            fileService.deleteFile(fileName);
+            requirement.getFiles().remove(fileName);
+        }
+
+        requirementRepository.save(requirement);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    public ResponseEntity<Void> uploadFiles(Long id, List<MultipartFile> files) {
+        Requirement requirement = this.getRequirementByIdAndNotDeleted(id);
+
+        if(requirement.getFiles().size() + files.size() > 5){
+            throw new TicketException("MAX_FILES_EXCEEDED", "The maximum number of files is 5");
+
+        }
+
+        List<String> sanitizedFiles = fileService.uploadFiles(files);
+        requirement.getFiles().addAll(sanitizedFiles);
+
+        requirementRepository.save(requirement);
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+
+
     //todo: Implementar el endpoint y funcion para poder manejar los comentarios
     //todo: Implementar los comentarios
 

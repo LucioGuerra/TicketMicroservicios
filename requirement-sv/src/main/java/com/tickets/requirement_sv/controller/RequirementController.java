@@ -72,6 +72,14 @@ public class RequirementController {
         return requirementService.closeRequirement(id);
     }
 
-    //todo: endpoint para eliminar un archivo concreto
-    //todo: endpoint para cargar un solo arvhivo
+    @DeleteMapping("/{id}/files")
+    public ResponseEntity<Void> deleteFiles(@PathVariable Long id, @RequestParam("fileName") List<String> fileNames) {
+        return requirementService.deleteFile(id, fileNames);
+    }
+
+    @PostMapping("/{id}/files")
+    public ResponseEntity<Void> uploadFiles(@PathVariable Long id, @RequestPart("files") @MaxFileListSize(max = 5) List<MultipartFile> files) {
+        return requirementService.uploadFiles(id, files);
+    }
+
 }
