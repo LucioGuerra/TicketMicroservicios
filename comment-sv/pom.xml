@@ -11,7 +11,7 @@
 	<groupId>com.ticket</groupId>
 	<artifactId>coment-sv</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>coment-sv</name>
+	<name>comment-sv</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
 	<licenses>
