@@ -1,5 +1,6 @@
 package com.tickets.requirement_sv.service;
 
+import com.ticket.shared.service.FileService;
 import com.tickets.requirement_sv.dto.GetRequirementDTO;
 import com.tickets.requirement_sv.dto.RequirementDTO;
 import com.tickets.requirement_sv.dto.UpdateRequirementDTO;
