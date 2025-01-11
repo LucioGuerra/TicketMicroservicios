@@ -57,7 +57,7 @@ public class OutsideUserService {
         return ResponseEntity.status(HttpStatus.OK).body(outsideUsers.stream().map(OutsideUser -> modelMapper.map(OutsideUser, GetOutsideUserDTO.class)).toList());
     }
 
-    //todo:mensaje de confirmacion en vez de void? idem anterior
+
     public ResponseEntity<GetOutsideUserDTO> updateOutsideUser(Long id, OutsideUserDTO outsideUserDTO) {
 
         OutsideUser userToUpdate = outsideUserRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Usuario con ID " + id + " no encontrado"));
@@ -98,5 +98,6 @@ public class OutsideUserService {
         outsideUserRepository.save(user);
     }
 
+    //todo: funcion con un usuario devolver todos los requerimientos que tenga asociados
 
 }
