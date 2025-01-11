@@ -58,36 +58,38 @@ public class OutsideUserService {
     }
 
     //todo:mensaje de confirmacion en vez de void? idem anterior
-    public void updateOutsideUser(Long id, OutsideUserDTO outsideUserDTO) {
-        OutsideUser userToUpdate = getOutsideUserById(id);
-        //todo: NO FUNCIONAN GETTERS??
-        if (OutsideUserDTO.getName() != null) {
-            userToUpdate.setName(OutsideUserDTO.getName());
+    public ResponseEntity<GetOutsideUserDTO> updateOutsideUser(Long id, OutsideUserDTO outsideUserDTO) {
+
+        OutsideUser userToUpdate = outsideUserRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Usuario con ID " + id + " no encontrado"));
+
+        if (outsideUserDTO.getName() != null) {
+            userToUpdate.setName(outsideUserDTO.getName());
         }
-        if (OutsideUserDTO.getEmail() != null) {
-            userToUpdate.setEmail(OutsideUserDTO.getEmail());
+        if (outsideUserDTO.getEmail() != null) {
+            userToUpdate.setEmail(outsideUserDTO.getEmail());
         }
-        if (OutsideUserDTO.getUsername() != null) {
-            userToUpdate.setUsername(OutsideUserDTO.getUsername());
+        if (outsideUserDTO.getUsername() != null) {
+            userToUpdate.setUsername(outsideUserDTO.getUsername());
         }
-        if (OutsideUserDTO.getSla() != null) {
-            userToUpdate.setSla(OutsideUserDTO.getSla());
+        if (outsideUserDTO.getCompany() != null) {
+            userToUpdate.setCompany(outsideUserDTO.getCompany());
         }
-        if (OutsideUserDTO.getCuil() != null && userToUpdate != null) {
-            ((OutsideUser) userToUpdate).setCuil(OutsideUserDTO.getCuil());
+        if (outsideUserDTO.getDescription() != null) {
+            userToUpdate.setDescription(outsideUserDTO.getDescription());
         }
-        if (OutsideUserDTO.getDescription() != null && userToUpdate != null) {
-            ((OutsideUser) userToUpdate).setDescription(OutsideUserDTO.getDescription());
+        if (outsideUserDTO.getCuil() != null) {
+            userToUpdate.setCuil(outsideUserDTO.getCuil());
         }
-        if (OutsideUserDTO.getCompany() != null && userToUpdate != null) {
-            ((OutsideUser) userToUpdate).setCompany(OutsideUserDTO.getCompany());
+        if (outsideUserDTO.getStatus() != null) {
+            userToUpdate.setStatus(outsideUserDTO.getStatus());
         }
-        if (OutsideUserDTO.getStatus() != null) {
-            userToUpdate.setStatus(OutsideUserDTO.getStatus());
-        }
-        //todo: revisar esto que puede ser null me lo marca IntelliJ
-        outsideUserRepository.save(userToUpdate);
+        OutsideUser updatedUser = outsideUserRepository.save(userToUpdate);
+
+        GetOutsideUserDTO responseDTO = modelMapper.map(updatedUser, GetOutsideUserDTO.class);
+
+        return ResponseEntity.ok(responseDTO);
     }
+
 
     //todo: revisar si deberia ser por ID o por nombre o lo que sea
     public void deleteOutsideUserById(Long id) {
