@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,10 +29,10 @@ public class RequirementController {
     private final RequirementService requirementService;
 
 
-   @PostMapping
+   @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> createRequirement(@RequestPart("requirement") @Valid RequirementDTO requirementDTO,
                                                   @RequestPart(value = "files", required = false) @MaxFileListSize(max = 5) List<MultipartFile> files) {
-        return requirementService.createRequirement(requirementDTO, files);
+           return requirementService.createRequirement(requirementDTO, files);
     }
 
     @GetMapping

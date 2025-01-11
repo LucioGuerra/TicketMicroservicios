@@ -105,6 +105,7 @@ public class RequirementService {
             for (String file : requirement.getFiles()) {
                 downloadUrls.add(fileService.downloadFile(file));
             }
+            System.err.println(downloadUrls);
             requirementDTO.setFiles(downloadUrls);
         }
 
