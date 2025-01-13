@@ -74,6 +74,13 @@ public class TypeService {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
+    public ResponseEntity<Boolean> validateType(Long id) {
+        boolean exists = typeRepository.findByIdAndNotDeleted(id)
+                .map(category -> !category.getDeleted())
+                .orElse(false);
+        return ResponseEntity.status(HttpStatus.OK).body(exists);
+    }
+
     public Type getTypeById(Long id) {
         return typeRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Type not found"));
     }

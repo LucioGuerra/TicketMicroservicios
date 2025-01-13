@@ -88,4 +88,12 @@ public class CategoryService {
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
+    public ResponseEntity<Boolean> validateCategory(Long id) {
+        Boolean exists = categoryRepository.findByIdAndNotDeleted(id)
+                .map(category -> !category.getDeleted())
+                .orElse(false);
+
+        return ResponseEntity.status(HttpStatus.OK).body(exists);
+    }
 }
