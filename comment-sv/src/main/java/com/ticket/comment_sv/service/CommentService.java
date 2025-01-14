@@ -10,11 +10,14 @@ import com.ticket.comment_sv.repository.RequirementRepository;
 import com.ticket.shared.service.FileService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -52,5 +55,16 @@ public class CommentService {
 
         return ResponseEntity.ok(modelMapper.map(comment, GetCommentDTO.class));
     }
+
+    public ResponseEntity<Page<GetCommentDTO>> getAllCommentsForRequirement(Long requirementId, Pageable pageable) {
+        Page<Comment> comments = commentRepository.findAllByRequirementIdAndDeletedIsFalse(requirementId, pageable);
+
+        Page<GetCommentDTO> commentsDTO = comments.map(comment -> modelMapper.map(comment, GetCommentDTO.class));
+
+        //todo: recuperar los datos minimos del usuario
+
+        return ResponseEntity.status(HttpStatus.OK).body(commentsDTO);
+    }
+
 
 }
