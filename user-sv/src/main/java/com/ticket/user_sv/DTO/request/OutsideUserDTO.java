@@ -33,5 +33,5 @@ public class OutsideUserDTO {
 
     private String company;
 
-    private String status;
+    private Boolean status;
 }

@@ -1,9 +1,6 @@
 package com.ticket.user_sv.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,6 +11,7 @@ import lombok.Setter;
 public class OutsideUser {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column
@@ -24,20 +22,15 @@ public class OutsideUser {
     private String company;
     @Column(unique = true)
     private String cuil;
-    //todo: preguntarle a Lucio como manejar los users y passwords (user unico y password plana?)
     @Column
     private String username;
-    @Column
-    private String password;
     @Column(length = 500)
     private String description;
     @Column
     private Boolean sla;
     @Column
-    private String status;
+    private Boolean status;
 
-
-    //todo: debería ser un constructor vacío?s
     public OutsideUser() {
     }
 

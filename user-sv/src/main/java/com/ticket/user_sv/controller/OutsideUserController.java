@@ -45,13 +45,13 @@ public class OutsideUserController {
     @PutMapping("/{id}")
     public ResponseEntity<String> updateOutsideUser(@PathVariable Long id, @RequestBody OutsideUserDTO outsideUserDTO) {
         outsideUserService.updateOutsideUser(id, outsideUserDTO);
-        return ResponseEntity.ok("Usuario actualizado correctamente.");
+        return ResponseEntity.ok("user updated correctly.");
     }
 
     // Eliminar un usuario externo (borrado lógico)
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteOutsideUserById(@PathVariable Long id) {
         outsideUserService.deleteOutsideUserById(id);
-        return ResponseEntity.ok("Usuario eliminado correctamente.");
+        return ResponseEntity.ok("user deleted correctly.");
     }
 }

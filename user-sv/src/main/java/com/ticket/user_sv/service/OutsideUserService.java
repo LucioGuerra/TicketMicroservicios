@@ -31,7 +31,7 @@ public class OutsideUserService {
     public ResponseEntity<GetOutsideUserDTO> createOutsideUser(OutsideUserDTO outsideUserDTO) {
         // Mapear el DTO a la entidad
         OutsideUser newUser = modelMapper.map(outsideUserDTO, OutsideUser.class);
-        newUser.setStatus("active");
+        newUser.setStatus(true);
         OutsideUser savedUser = outsideUserRepository.save(newUser);
 
         // Mapear la entidad guardada a un DTO para la respuesta
@@ -43,7 +43,7 @@ public class OutsideUserService {
 
     //devuelve el OutsideUser con el ID
     public OutsideUser getOutsideUserById(Long id) {
-        return OutsideUserRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Usuario con id: " + id + " no encontrado"));
+        return outsideUserRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("user with id: " + id + " not found"));
     }
 
 
@@ -60,7 +60,7 @@ public class OutsideUserService {
 
     public ResponseEntity<GetOutsideUserDTO> updateOutsideUser(Long id, OutsideUserDTO outsideUserDTO) {
 
-        OutsideUser userToUpdate = outsideUserRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Usuario con ID " + id + " no encontrado"));
+        OutsideUser userToUpdate = outsideUserRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("user with id: " + id + " not found"));
 
         if (outsideUserDTO.getName() != null) {
             userToUpdate.setName(outsideUserDTO.getName());
@@ -93,8 +93,8 @@ public class OutsideUserService {
 
     //todo: revisar si deberia ser por ID o por nombre o lo que sea
     public void deleteOutsideUserById(Long id) {
-        OutsideUser user = outsideUserRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Usuario con ID " + id + " no encontrado"));
-        user.setStatus("deleted");
+        OutsideUser user = outsideUserRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("user with id: " + id + " not found"));
+        user.setStatus(false);
         outsideUserRepository.save(user);
     }
 
