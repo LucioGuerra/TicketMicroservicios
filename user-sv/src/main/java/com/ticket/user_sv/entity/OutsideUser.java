@@ -16,7 +16,7 @@ public class OutsideUser {
 
     @Column
     private String name;
-    @Column
+    @Column(unique = true)
     private String email;
     @Column
     private String company;
@@ -29,9 +29,10 @@ public class OutsideUser {
     @Column
     private Boolean sla;
     @Column
-    private Boolean status;
+    private Boolean active;
 
     public OutsideUser() {
+        this.active = true;
     }
 
 }

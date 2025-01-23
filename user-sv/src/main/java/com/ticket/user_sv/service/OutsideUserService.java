@@ -31,7 +31,6 @@ public class OutsideUserService {
     public ResponseEntity<GetOutsideUserDTO> createOutsideUser(OutsideUserDTO outsideUserDTO) {
         // Mapear el DTO a la entidad
         OutsideUser newUser = modelMapper.map(outsideUserDTO, OutsideUser.class);
-        newUser.setStatus(true);
         OutsideUser savedUser = outsideUserRepository.save(newUser);
 
         // Mapear la entidad guardada a un DTO para la respuesta
@@ -42,18 +41,13 @@ public class OutsideUserService {
     }
 
     //devuelve el OutsideUser con el ID
-    public OutsideUser getOutsideUserById(Long id) {
+    public ResponseEntity<GetOutsideUserDTO> getOutsideUserById(Long id) {
         return outsideUserRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("user with id: " + id + " not found"));
     }
 
 
-    public ResponseEntity<List<GetOutsideUserDTO>> getAllActiveOutsideUsers() {
-        List<OutsideUser> outsideUsers = outsideUserRepository.findAllActiveUsers();
-        return ResponseEntity.status(HttpStatus.OK).body(outsideUsers.stream().map(OutsideUser -> modelMapper.map(OutsideUser, GetOutsideUserDTO.class)).toList());
-    }
-
     public ResponseEntity<List<GetOutsideUserDTO>> getAllOutsideUsers() {
-        List<OutsideUser> outsideUsers = outsideUserRepository.findAll();
+        List<OutsideUser> outsideUsers = outsideUserRepository.findAllActiveUsers();
         return ResponseEntity.status(HttpStatus.OK).body(outsideUsers.stream().map(OutsideUser -> modelMapper.map(OutsideUser, GetOutsideUserDTO.class)).toList());
     }
 
@@ -80,8 +74,8 @@ public class OutsideUserService {
         if (outsideUserDTO.getCuil() != null) {
             userToUpdate.setCuil(outsideUserDTO.getCuil());
         }
-        if (outsideUserDTO.getStatus() != null) {
-            userToUpdate.setStatus(outsideUserDTO.getStatus());
+        if (outsideUserDTO.getActive() != null) {
+            userToUpdate.setActive(outsideUserDTO.getActive());
         }
         OutsideUser updatedUser = outsideUserRepository.save(userToUpdate);
 
@@ -91,10 +85,9 @@ public class OutsideUserService {
     }
 
 
-    //todo: revisar si deberia ser por ID o por nombre o lo que sea
     public void deleteOutsideUserById(Long id) {
         OutsideUser user = outsideUserRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("user with id: " + id + " not found"));
-        user.setStatus(false);
+        user.setActive(false);
         outsideUserRepository.save(user);
     }
 

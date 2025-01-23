@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface OutsideUserRepository extends JpaRepository <OutsideUser, Long> {
 
-    @Query("SELECT u FROM OutsideUser u WHERE u.status = 'active'")
+    @Query("SELECT u FROM OutsideUser u WHERE u.active = true")
     List<OutsideUser> findAllActiveUsers();
 
 }

@@ -32,12 +32,6 @@ public class OutsideUserController {
     // Obtener todos los usuarios activos
     @GetMapping("/active")
     public ResponseEntity<List<GetOutsideUserDTO>> getAllActiveOutsideUsers() {
-        return outsideUserService.getAllActiveOutsideUsers();
-    }
-
-    // Obtener todos los usuarios (incluyendo eliminados)
-    @GetMapping
-    public ResponseEntity<List<GetOutsideUserDTO>> getAllOutsideUsers() {
         return outsideUserService.getAllOutsideUsers();
     }
 

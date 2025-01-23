@@ -20,6 +20,6 @@ public class GetOutsideUserDTO {
     private String cuil;
     private String company;
     private String description;
-    private Boolean status;
+    private Boolean active;
 
 }
