@@ -20,39 +20,34 @@ public class OutsideUserService {
     private final OutsideUserRepository outsideUserRepository;
     private final ModelMapper modelMapper;
 
-    //todo: preguntar a lucio si esto es un constructor y esta bien hecho
     @Autowired
     public OutsideUserService(OutsideUserRepository outsideUserRepository, ModelMapper modelMapper) {
         this.outsideUserRepository = outsideUserRepository;
         this.modelMapper = modelMapper;
     }
 
-    //todo: preguntar a lucio si esto es como le gusta :)
     public ResponseEntity<GetOutsideUserDTO> createOutsideUser(OutsideUserDTO outsideUserDTO) {
-        // Mapear el DTO a la entidad
+
         OutsideUser newUser = modelMapper.map(outsideUserDTO, OutsideUser.class);
         OutsideUser savedUser = outsideUserRepository.save(newUser);
 
-        // Mapear la entidad guardada a un DTO para la respuesta
         GetOutsideUserDTO responseDTO = modelMapper.map(savedUser, GetOutsideUserDTO.class);
 
-        // Retornar la respuesta con HTTP 201 Created
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
 
-    //devuelve el OutsideUser con el ID
     public ResponseEntity<GetOutsideUserDTO> getOutsideUserById(Long id) {
-        return outsideUserRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("user with id: " + id + " not found"));
+        OutsideUser outsideUser = outsideUserRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User with id: " + id + " not found"));
+        GetOutsideUserDTO responseDTO = modelMapper.map(outsideUser, GetOutsideUserDTO.class);
+        return ResponseEntity.ok(responseDTO);
     }
-
 
     public ResponseEntity<List<GetOutsideUserDTO>> getAllOutsideUsers() {
         List<OutsideUser> outsideUsers = outsideUserRepository.findAllActiveUsers();
         return ResponseEntity.status(HttpStatus.OK).body(outsideUsers.stream().map(OutsideUser -> modelMapper.map(OutsideUser, GetOutsideUserDTO.class)).toList());
     }
 
-
-    public ResponseEntity<GetOutsideUserDTO> updateOutsideUser(Long id, OutsideUserDTO outsideUserDTO) {
+    public void updateOutsideUser(Long id, OutsideUserDTO outsideUserDTO) {
 
         OutsideUser userToUpdate = outsideUserRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("user with id: " + id + " not found"));
 
@@ -77,20 +72,14 @@ public class OutsideUserService {
         if (outsideUserDTO.getActive() != null) {
             userToUpdate.setActive(outsideUserDTO.getActive());
         }
-        OutsideUser updatedUser = outsideUserRepository.save(userToUpdate);
 
-        GetOutsideUserDTO responseDTO = modelMapper.map(updatedUser, GetOutsideUserDTO.class);
-
-        return ResponseEntity.ok(responseDTO);
+        outsideUserRepository.save(userToUpdate);
     }
-
 
     public void deleteOutsideUserById(Long id) {
         OutsideUser user = outsideUserRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("user with id: " + id + " not found"));
         user.setActive(false);
         outsideUserRepository.save(user);
     }
-
-    //todo: funcion con un usuario devolver todos los requerimientos que tenga asociados
 
 }

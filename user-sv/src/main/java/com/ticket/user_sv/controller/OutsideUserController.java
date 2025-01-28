@@ -23,10 +23,15 @@ public class OutsideUserController {
     }
 
     // Obtener un usuario externo por ID
+    //@GetMapping("/{id}")
+    //public ResponseEntity<OutsideUser> getOutsideUserById(@PathVariable Long id) {
+      //  OutsideUser user = outsideUserService.getOutsideUserById(id);
+     //   return ResponseEntity.ok(user);
+    //}
+
     @GetMapping("/{id}")
-    public ResponseEntity<OutsideUser> getOutsideUserById(@PathVariable Long id) {
-        OutsideUser user = outsideUserService.getOutsideUserById(id);
-        return ResponseEntity.ok(user);
+    public ResponseEntity<GetOutsideUserDTO> getOutsideUserById(@PathVariable Long id) {
+        return outsideUserService.getOutsideUserById(id);
     }
 
     // Obtener todos los usuarios activos
