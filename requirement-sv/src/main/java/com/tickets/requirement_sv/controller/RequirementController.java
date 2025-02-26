@@ -23,7 +23,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/public/requirements")
+@RequestMapping("/api/requirements")
 public class RequirementController {
 
     private final RequirementService requirementService;

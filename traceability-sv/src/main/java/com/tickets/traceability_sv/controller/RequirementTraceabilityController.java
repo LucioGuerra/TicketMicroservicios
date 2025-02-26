@@ -13,7 +13,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/traceability")
+@RequestMapping("/api/traceability")
 public class RequirementTraceabilityController {
 
     private final RequirementTraceabilityService requirementTraceabilityService;

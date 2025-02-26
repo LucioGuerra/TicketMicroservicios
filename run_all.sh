@@ -48,6 +48,6 @@ done
 
 docker-compose down
 
-docker-commpose up -d
+docker-compose up -d
 
 echo "Todos los servicios han sido compilados exitosamente."

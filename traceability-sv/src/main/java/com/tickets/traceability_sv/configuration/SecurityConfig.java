@@ -19,9 +19,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/public/**").permitAll()
-                        .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers("/**").authenticated()
+                        .anyRequest().permitAll()
                 )
                 .cors(withDefaults())
                 .oauth2ResourceServer(oauth2 -> oauth2
