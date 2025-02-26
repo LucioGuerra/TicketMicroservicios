@@ -24,10 +24,10 @@ public class KafkaConfig {
     @Bean
     public ConsumerFactory<String, RequirementTraceabilityEvent> consumerFactory() {
         JsonDeserializer<RequirementTraceabilityEvent> deserializer = new JsonDeserializer<>(RequirementTraceabilityEvent.class);
-        deserializer.addTrustedPackages("*"); // Confiar en todos los paquetes
+        deserializer.addTrustedPackages("*");
 
         Map<String, Object> props = new HashMap<>();
-        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaURL); // Dirección de Kafka
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaURL);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, "traceability-sv");
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);

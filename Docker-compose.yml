@@ -24,3 +24,156 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY}
+      MINIO_BUCKETS: "comments,requirements"
+    volumes:
+      - minio/data:/data
+    ports:
+      - "9000:9000"
+    command: server /data
+    networks:
+      - app_net
+
+
+  postgres:
+    image: postgres:latest
+    container_name: ticket-db
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: "root"
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres/data:/var/lib/postgresql/data
+      - ./postgres/init:/docker-entrypoint-initdb.d
+    networks:
+      - app_net
+
+
+  api-gateway:
+    build:
+      context: ./api-gateway
+    environment:
+      EUREKA_URL: "eureka-sv:8761"
+    ports:
+      - "443:443"
+    volumes:
+      - ${API_GATEWAY_JAR}:/app/api-gateway.jar
+    networks:
+      - app_net
+    depends_on:
+      - postgres
+      - minio
+
+
+  comment-sv:
+    build:
+      context: ./comment-sv
+    environment:
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_URL: ${DB_URL}
+      DB_NAME: "comment_db"
+      EUREKA_URL: ${EUREKA_URL}
+      MINIO_URL: ${MINIO_URL}
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+      MINIO_BUCKET_NAME: "comments"
+    volumes:
+      - ${COMMENT_SV_JAR}:/app/comment-sv.jar
+    networks:
+      - app_net
+    depends_on:
+      - postgres
+      - minio
+
+  eureka-sv:
+    build:
+      context: ./eureka-sv
+    volumes:
+      - ${EUREKA_SV_JAR}:/app/eureka-sv.jar
+    networks:
+      - app_net
+    depends_on:
+      - postgres
+      - minio
+
+  requirement-sv:
+    build:
+      context: ./requirement-sv
+    environment:
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_URL: ${DB_URL}
+      DB_NAME: "requirement_db"
+      EUREKA_URL: ${EUREKA_URL}
+      KAFKA_URL: ${KAFKA_URL}
+      MINIO_URL: ${MINIO_URL}
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
+      MINIO_BUCKET_NAME: "requirements"
+    volumes:
+      - ${REQUIREMENT_SV_JAR}:/app/requirement-sv.jar
+    networks:
+      - app_net
+    depends_on:
+      - postgres
+      - minio
+
+  traceability-sv:
+    build:
+      context: ./traceability-sv
+    environment:
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_URL: ${DB_URL}
+      DB_NAME: "traceability_db"
+      EUREKA_URL: ${EUREKA_URL}
+      KAFKA_URL: ${KAFKA_URL}
+    volumes:
+      - ${TRACEABILITY_SV_JAR}:/app/traceability-sv.jar
+    networks:
+      - app_net
+    depends_on:
+      - postgres
+      - minio
+
+  type-sv:
+    build:
+      context: ./type-sv
+    environment:
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_URL: ${DB_URL}
+      DB_NAME: "type_db"
+      EUREKA_URL: ${EUREKA_URL}
+    volumes:
+      - ${TYPE_SV_JAR}:/app/type-sv.jar
+    networks:
+      - app_net
+    depends_on:
+      - postgres
+      - minio
+
+  user-sv:
+    build:
+      context: ./user-sv
+    environment:
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_URL: ${DB_URL}
+      DB_NAME: "user_db"
+      EUREKA_URL: ${EUREKA_URL}
+    volumes:
+      - ${USER_SV_JAR}:/app/user-sv.jar
+    networks:
+      - app_net
+    depends_on:
+      - postgres
+      - minio
