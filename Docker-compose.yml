@@ -61,6 +61,7 @@ services:
 
 
   api-gateway:
+    container_name: api-gateway
     build:
       context: ./api-gateway
     environment:
@@ -77,6 +78,7 @@ services:
 
 
   comment-sv:
+    container_name: comment-sv
     build:
       context: ./comment-sv
     environment:
@@ -98,6 +100,7 @@ services:
       - minio
 
   eureka-sv:
+    container_name: eureka-sv
     build:
       context: ./eureka-sv
     volumes:
@@ -109,6 +112,7 @@ services:
       - minio
 
   requirement-sv:
+    container_name: requirement-sv
     build:
       context: ./requirement-sv
     environment:
@@ -131,6 +135,7 @@ services:
       - minio
 
   traceability-sv:
+    container_name: traceability-sv
     build:
       context: ./traceability-sv
     environment:
@@ -149,6 +154,7 @@ services:
       - minio
 
   type-sv:
+    container_name: type-sv
     build:
       context: ./type-sv
     environment:

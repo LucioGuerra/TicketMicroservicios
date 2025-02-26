@@ -48,6 +48,11 @@ done
 
 docker-compose down
 
+set -a
+source .env
+set +a
+
+
 docker-compose up -d
 
 echo "Todos los servicios han sido compilados exitosamente."
