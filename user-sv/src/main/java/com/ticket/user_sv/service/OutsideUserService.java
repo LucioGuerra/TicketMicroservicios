@@ -81,5 +81,5 @@ public class OutsideUserService {
         user.setActive(false);
         outsideUserRepository.save(user);
     }
-
+    
 }
