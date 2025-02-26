@@ -75,3 +75,4 @@ generated/
 .fleet/
 
 postgres/data/*
+minio/data/*
