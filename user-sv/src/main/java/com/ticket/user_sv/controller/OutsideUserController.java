@@ -2,15 +2,13 @@ package com.ticket.user_sv.controller;
 
 import com.ticket.user_sv.DTO.request.OutsideUserDTO;
 import com.ticket.user_sv.DTO.response.GetOutsideUserDTO;
-import com.ticket.user_sv.entity.OutsideUser;
 import com.ticket.user_sv.service.OutsideUserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/outside-users")

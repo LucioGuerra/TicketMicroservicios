@@ -4,11 +4,11 @@ package com.ticket.user_sv.service;
 import com.ticket.user_sv.DTO.request.OutsideUserDTO;
 import com.ticket.user_sv.DTO.response.GetOutsideUserDTO;
 import com.ticket.user_sv.entity.OutsideUser;
+import com.ticket.user_sv.mapper.OutsideUserMapper;
 import com.ticket.user_sv.repository.OutsideUserRepository;
 import com.ticket.user_sv.specification.UserSpecification;
 import jakarta.persistence.EntityNotFoundException;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -16,39 +16,33 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
+@AllArgsConstructor
 @Service
 public class OutsideUserService {
 
     private final OutsideUserRepository outsideUserRepository;
-    private final ModelMapper modelMapper;
+    private final OutsideUserMapper outsideUserMapper;
 
-    @Autowired
-    public OutsideUserService(OutsideUserRepository outsideUserRepository, ModelMapper modelMapper) {
-        this.outsideUserRepository = outsideUserRepository;
-        this.modelMapper = modelMapper;
-    }
 
     public ResponseEntity<GetOutsideUserDTO> createOutsideUser(OutsideUserDTO outsideUserDTO) {
 
-        OutsideUser newUser = modelMapper.map(outsideUserDTO, OutsideUser.class);
+        OutsideUser newUser = outsideUserMapper.toEntity(outsideUserDTO);
         OutsideUser savedUser = outsideUserRepository.save(newUser);
 
-        GetOutsideUserDTO responseDTO = modelMapper.map(savedUser, GetOutsideUserDTO.class);
+        GetOutsideUserDTO responseDTO = outsideUserMapper.toDTO(savedUser);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
 
     public ResponseEntity<GetOutsideUserDTO> getOutsideUserById(Long id) {
         OutsideUser outsideUser = outsideUserRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User with id: " + id + " not found"));
-        GetOutsideUserDTO responseDTO = modelMapper.map(outsideUser, GetOutsideUserDTO.class);
+        GetOutsideUserDTO responseDTO = outsideUserMapper.toDTO(outsideUser);
         return ResponseEntity.ok(responseDTO);
     }
 
     public ResponseEntity<Page<GetOutsideUserDTO>> getAllOutsideUsers(Pageable pageable, String name, String email, String company,String cuil,Boolean sla,String username, Boolean isDeleted) {
 
-        Specification<OutsideUser> spec = Specification.where(UserSpecification.isDeleted(false))
+        Specification<OutsideUser> spec = Specification.where(UserSpecification.isDeleted(true))
                 .and(UserSpecification.byName(name))
                 .and(UserSpecification.byEmail(email))
                 .and((UserSpecification.byCompany(company))
@@ -59,7 +53,7 @@ public class OutsideUserService {
 
         Page<OutsideUser> userPage = outsideUserRepository.findAll(spec, pageable);
 
-        return ResponseEntity.status(HttpStatus.OK).body(userPage.map(OutsideUser -> modelMapper.map(OutsideUser, GetOutsideUserDTO.class)));
+        return ResponseEntity.status(HttpStatus.OK).body(userPage.map(outsideUserMapper::toDTO));
     }
 
     public void updateOutsideUser(Long id, OutsideUserDTO outsideUserDTO) {
