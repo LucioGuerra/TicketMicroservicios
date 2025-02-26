@@ -7,6 +7,8 @@ services:
       ZOOKEEPER_TICK_TIME: 2000
     ports:
       - "2181:2181"
+    networks:
+        - app_net
 
   kafka:
     image: confluentinc/cp-kafka:latest
@@ -24,6 +26,8 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+        - app_net
 
   minio:
     image: minio/minio:latest
@@ -33,7 +37,7 @@ services:
       MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY}
       MINIO_BUCKETS: "comments,requirements"
     volumes:
-      - minio/data:/data
+      - ./minio/data:/data
     ports:
       - "9000:9000"
     command: server /data
@@ -64,7 +68,7 @@ services:
     ports:
       - "443:443"
     volumes:
-      - ${API_GATEWAY_JAR}:/app/api-gateway.jar
+      - ${GATEWAY_DIR}/api-gateway-0.0.1-SNAPSHOT.jar:/app/app.jar
     networks:
       - app_net
     depends_on:
@@ -84,9 +88,9 @@ services:
       MINIO_URL: ${MINIO_URL}
       MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
       MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
-      MINIO_BUCKET_NAME: "comments"
+      MINIO_BUCKET: "comments"
     volumes:
-      - ${COMMENT_SV_JAR}:/app/comment-sv.jar
+      - ${COMMENT_DIR}/coment-sv-0.0.1-SNAPSHOT.jar:/app/app.jar
     networks:
       - app_net
     depends_on:
@@ -97,7 +101,7 @@ services:
     build:
       context: ./eureka-sv
     volumes:
-      - ${EUREKA_SV_JAR}:/app/eureka-sv.jar
+      - ${EUREKA_DIR}/eureka-sv-0.0.1-SNAPSHOT.jar:/app/app.jar
     networks:
       - app_net
     depends_on:
@@ -117,9 +121,9 @@ services:
       MINIO_URL: ${MINIO_URL}
       MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
       MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
-      MINIO_BUCKET_NAME: "requirements"
+      MINIO_BUCKET: "requirements"
     volumes:
-      - ${REQUIREMENT_SV_JAR}:/app/requirement-sv.jar
+      - ${REQUIREMENT_DIR}/requirement-sv-0.0.1-SNAPSHOT.jar:/app/app.jar
     networks:
       - app_net
     depends_on:
@@ -137,7 +141,7 @@ services:
       EUREKA_URL: ${EUREKA_URL}
       KAFKA_URL: ${KAFKA_URL}
     volumes:
-      - ${TRACEABILITY_SV_JAR}:/app/traceability-sv.jar
+      - ${TRACEABILITY_DIR}/traceability-sv-0.0.1-SNAPSHOT.jar:/app/app.jar
     networks:
       - app_net
     depends_on:
@@ -154,26 +158,30 @@ services:
       DB_NAME: "type_db"
       EUREKA_URL: ${EUREKA_URL}
     volumes:
-      - ${TYPE_SV_JAR}:/app/type-sv.jar
+      - ${TYPE_DIR}/type-sv-0.0.1-SNAPSHOT.jar:/app/app.jar
     networks:
       - app_net
     depends_on:
       - postgres
       - minio
 
-  user-sv:
-    build:
-      context: ./user-sv
-    environment:
-      DB_USER: ${DB_USER}
-      DB_PASSWORD: ${DB_PASSWORD}
-      DB_URL: ${DB_URL}
-      DB_NAME: "user_db"
-      EUREKA_URL: ${EUREKA_URL}
-    volumes:
-      - ${USER_SV_JAR}:/app/user-sv.jar
-    networks:
-      - app_net
-    depends_on:
-      - postgres
-      - minio
+#  user-sv:
+#    build:
+ #     context: ./user-sv
+ #   environment:
+ #     DB_USER: ${DB_USER}
+ #     DB_PASSWORD: ${DB_PASSWORD}
+ #     DB_URL: ${DB_URL}
+ #     DB_NAME: "user_db"
+ #     EUREKA_URL: ${EUREKA_URL}
+ #   volumes:
+ #     - ${USER_DIR}/user-sv-0.0.1-SNAPSHOT.jar:/app/user-sv.jar
+ #   networks:
+ #     - app_net
+ #  depends_on:
+  #    - postgres
+  #    - minio
+
+networks:
+    app_net:
+        driver: bridge

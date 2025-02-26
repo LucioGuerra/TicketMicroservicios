@@ -12,10 +12,10 @@ public class FileServiceConfig {
     @Value("${MINIO_URL}")
     private String minioUrl;
 
-    @Value("${MINIO_USER}")
+    @Value("${MINIO_ACCESS_KEY}")
     private String minioAccessKey;
 
-    @Value("${MINIO_PASSWORD}")
+    @Value("${MINIO_SECRET_KEY}")
     private String minioSecretKey;
 
     @Value("${MINIO_BUCKET}")

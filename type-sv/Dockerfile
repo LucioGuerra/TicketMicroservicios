@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17-jdk AS runtime
+FROM eclipse-temurin:17-jdk-alpine
 
 # Establece el directorio de trabajo
 WORKDIR /app

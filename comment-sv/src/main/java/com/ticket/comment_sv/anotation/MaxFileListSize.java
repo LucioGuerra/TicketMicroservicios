@@ -1,6 +1,7 @@
 package com.ticket.comment_sv.anotation;
 
 import jakarta.validation.Constraint;
+import jakarta.validation.Payload;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
