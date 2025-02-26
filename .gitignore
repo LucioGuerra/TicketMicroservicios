@@ -1,0 +1,77 @@
+# Compiled class files
+*.class
+
+# Log files
+*.log
+
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+.gradle/caches/
+.gradle/gradle-app-name/
+.gradle/gradle.properties
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+out/
+
+# Eclipse
+.classpath
+.project
+.settings/
+
+# VS Code
+.vscode/
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.swp
+*.swo
+*~
+
+# Spring Boot
+*.jar
+*.war
+
+# Logs and temp files
+logs/
+tmp/
+
+# Dependency directory
+lib/
+
+# Environment variables
+.env
+.env-build
+.env.local
+.env.*.local
+
+# Test outputs
+test-output/
+
+
+# Generated files
+generated/
+
+# JetBrains Fleet
+.fleet/
+
+postgres/data/*
