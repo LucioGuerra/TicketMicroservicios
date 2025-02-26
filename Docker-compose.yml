@@ -171,22 +171,23 @@ services:
       - postgres
       - minio
 
-#  user-sv:
-#    build:
- #     context: ./user-sv
- #   environment:
- #     DB_USER: ${DB_USER}
- #     DB_PASSWORD: ${DB_PASSWORD}
- #     DB_URL: ${DB_URL}
- #     DB_NAME: "user_db"
- #     EUREKA_URL: ${EUREKA_URL}
- #   volumes:
- #     - ${USER_DIR}/user-sv-0.0.1-SNAPSHOT.jar:/app/user-sv.jar
- #   networks:
- #     - app_net
- #  depends_on:
-  #    - postgres
-  #    - minio
+  user-sv:
+    container_name: user-sv
+    build:
+      context: ./user-sv
+    environment:
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_URL: ${DB_URL}
+      DB_NAME: "user_db"
+      EUREKA_URL: ${EUREKA_URL}
+    volumes:
+      - ${USER_DIR}/user-sv-0.0.1-SNAPSHOT.jar:/app/app.jar
+    networks:
+      - app_net
+    depends_on:
+      - postgres
+      - minio
 
 networks:
     app_net:

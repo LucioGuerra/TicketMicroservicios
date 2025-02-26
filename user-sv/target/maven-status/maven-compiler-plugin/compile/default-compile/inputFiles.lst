@@ -1,9 +1,10 @@
-E:\Diseño Microservicios\user-sv\src\main\java\com\ticket\user_sv\configuration\ModelMapperConfig.java
 E:\Diseño Microservicios\user-sv\src\main\java\com\ticket\user_sv\configuration\SecurityConfig.java
 E:\Diseño Microservicios\user-sv\src\main\java\com\ticket\user_sv\controller\OutsideUserController.java
 E:\Diseño Microservicios\user-sv\src\main\java\com\ticket\user_sv\DTO\request\OutsideUserDTO.java
 E:\Diseño Microservicios\user-sv\src\main\java\com\ticket\user_sv\DTO\response\GetOutsideUserDTO.java
 E:\Diseño Microservicios\user-sv\src\main\java\com\ticket\user_sv\entity\OutsideUser.java
+E:\Diseño Microservicios\user-sv\src\main\java\com\ticket\user_sv\mapper\OutsideUserMapper.java
 E:\Diseño Microservicios\user-sv\src\main\java\com\ticket\user_sv\repository\OutsideUserRepository.java
 E:\Diseño Microservicios\user-sv\src\main\java\com\ticket\user_sv\service\OutsideUserService.java
+E:\Diseño Microservicios\user-sv\src\main\java\com\ticket\user_sv\specification\UserSpecification.java
 E:\Diseño Microservicios\user-sv\src\main\java\com\ticket\user_sv\UserSvApplication.java
