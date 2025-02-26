@@ -5,9 +5,13 @@ import com.ticket.user_sv.DTO.request.OutsideUserDTO;
 import com.ticket.user_sv.DTO.response.GetOutsideUserDTO;
 import com.ticket.user_sv.entity.OutsideUser;
 import com.ticket.user_sv.repository.OutsideUserRepository;
+import com.ticket.user_sv.specification.UserSpecification;
 import jakarta.persistence.EntityNotFoundException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -42,9 +46,20 @@ public class OutsideUserService {
         return ResponseEntity.ok(responseDTO);
     }
 
-    public ResponseEntity<List<GetOutsideUserDTO>> getAllOutsideUsers() {
-        List<OutsideUser> outsideUsers = outsideUserRepository.findAllActiveUsers();
-        return ResponseEntity.status(HttpStatus.OK).body(outsideUsers.stream().map(OutsideUser -> modelMapper.map(OutsideUser, GetOutsideUserDTO.class)).toList());
+    public ResponseEntity<Page<GetOutsideUserDTO>> getAllOutsideUsers(Pageable pageable, String name, String email, String company,String cuil,Boolean sla,String username, Boolean isDeleted) {
+
+        Specification<OutsideUser> spec = Specification.where(UserSpecification.isDeleted(false))
+                .and(UserSpecification.byName(name))
+                .and(UserSpecification.byEmail(email))
+                .and((UserSpecification.byCompany(company))
+                .and(UserSpecification.byCuil(cuil))
+                .and(UserSpecification.bySla(sla))
+                .and(UserSpecification.byUsername(username))
+                .and(UserSpecification.isDeleted(isDeleted)));
+
+        Page<OutsideUser> userPage = outsideUserRepository.findAll(spec, pageable);
+
+        return ResponseEntity.status(HttpStatus.OK).body(userPage.map(OutsideUser -> modelMapper.map(OutsideUser, GetOutsideUserDTO.class)));
     }
 
     public void updateOutsideUser(Long id, OutsideUserDTO outsideUserDTO) {

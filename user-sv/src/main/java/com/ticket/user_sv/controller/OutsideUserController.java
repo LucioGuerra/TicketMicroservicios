@@ -4,6 +4,9 @@ import com.ticket.user_sv.DTO.request.OutsideUserDTO;
 import com.ticket.user_sv.DTO.response.GetOutsideUserDTO;
 import com.ticket.user_sv.entity.OutsideUser;
 import com.ticket.user_sv.service.OutsideUserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +32,15 @@ public class OutsideUserController {
 
     // Obtener todos los usuarios activos
     @GetMapping("/active")
-    public ResponseEntity<List<GetOutsideUserDTO>> getAllActiveOutsideUsers() {
-        return outsideUserService.getAllOutsideUsers();
+    public ResponseEntity<Page<GetOutsideUserDTO>> getAllActiveOutsideUsers(@PageableDefault(size = 10) Pageable pageable,
+                                                                            @RequestParam(required = false) String name,
+                                                                            @RequestParam(required = false) String email,
+                                                                            @RequestParam(required = false) String company,
+                                                                            @RequestParam(required = false) String cuil,
+                                                                            @RequestParam(required = false) Boolean sla,
+                                                                            @RequestParam(required = false) String username,
+                                                                            @RequestParam(required = false) Boolean isDeleted) {
+        return outsideUserService.getAllOutsideUsers(pageable, name, email, company, cuil, sla, username, isDeleted);
     }
 
     // Actualizar un usuario externo
