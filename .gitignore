@@ -72,5 +72,5 @@ generated/
 # JetBrains Fleet
 .fleet/
 
-minio/data/
-postgre/data/
+minio/data/*
+postgre/data/*

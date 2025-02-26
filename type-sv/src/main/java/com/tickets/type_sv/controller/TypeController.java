@@ -13,7 +13,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("/public/types")
+@RequestMapping("/api/types")
 public class TypeController {
 
     private final TypeService typeService;

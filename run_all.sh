@@ -4,6 +4,13 @@ set -a
 source .env-build
 set +a
 
+docker-compose up postgres -d
+
+cd Bibliotecas/file-service-library
+mvn clean install
+cd ..
+cd ..
+
 SERVICES=("api-gateway" "comment-sv" "eureka-sv" "requirement-sv" "traceability-sv" "type-sv")
 
 for service in "${SERVICES[@]}"; do
@@ -38,5 +45,14 @@ for service in "${SERVICES[@]}"; do
     echo "El directorio $service no existe"
   fi
 done
+
+docker-compose down
+
+set -a
+source .env
+set +a
+
+
+docker-compose up -d
 
 echo "Todos los servicios han sido compilados exitosamente."
