@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -34,6 +35,14 @@ public class Comment {
 
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+
+    @Column(nullable = false)
+    private Boolean deleted;
+
+    private Comment(){
+        this.deleted = false;
+        this.files = new ArrayList<>();
+    }
 
     @PrePersist
     public void prePersist() {

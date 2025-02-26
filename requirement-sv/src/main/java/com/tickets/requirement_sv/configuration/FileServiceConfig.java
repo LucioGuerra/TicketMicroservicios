@@ -23,7 +23,7 @@ public class FileServiceConfig {
 
 
     @Bean
-    public FileService fileService(){
+    public FileService fileService() {
         return new FileService(minioUrl, minioAccessKey, minioSecretKey, minioBucketName, (code, message) -> {
             throw new TicketException(code, message);
         });
