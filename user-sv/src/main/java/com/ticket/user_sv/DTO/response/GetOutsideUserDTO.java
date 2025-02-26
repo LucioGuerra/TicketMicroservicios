@@ -22,4 +22,8 @@ public class GetOutsideUserDTO {
     private String description;
     private Boolean active;
 
+    private GetOutsideUserDTO(){
+
+    }
+
 }
