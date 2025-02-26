@@ -11,7 +11,7 @@ mvn clean install
 cd ..
 cd ..
 
-SERVICES=("api-gateway" "comment-sv" "eureka-sv" "requirement-sv" "traceability-sv" "type-sv")
+SERVICES=("api-gateway" "comment-sv" "eureka-sv" "requirement-sv" "traceability-sv" "type-sv" "user-sv")
 
 for service in "${SERVICES[@]}"; do
   echo "Compilando servicio: $service"
