@@ -22,7 +22,7 @@ public class SecurityConfig {
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().permitAll()
                 )
-                .cors(withDefaults())
+                .cors(AbstractHttpConfigurer::disable)
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(withDefaults()))
                 .sessionManagement((session) -> session.sessionCreationPolicy(STATELESS))
                 .build();

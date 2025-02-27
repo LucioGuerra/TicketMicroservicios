@@ -21,7 +21,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorize) -> authorize
                         .anyRequest().permitAll()
                 )
-                .cors(withDefaults())
+                .cors(AbstractHttpConfigurer::disable)
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(withDefaults())
                 ).sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
