@@ -46,6 +46,8 @@ for service in "${SERVICES[@]}"; do
   fi
 done
 
+./insert_data.sh
+
 docker-compose down
 
 set -a
