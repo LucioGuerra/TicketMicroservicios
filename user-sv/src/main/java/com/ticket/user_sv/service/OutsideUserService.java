@@ -31,7 +31,9 @@ public class OutsideUserService {
 
         GetOutsideUserDTO responseDTO = outsideUserMapper.toDTO(savedUser);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .header("Access-Control-Allow-Origin", "*")
+                .body(responseDTO);
     }
 
     public ResponseEntity<GetOutsideUserDTO> getOutsideUserById(Long id) {
@@ -53,7 +55,9 @@ public class OutsideUserService {
 
         Page<OutsideUser> userPage = outsideUserRepository.findAll(spec, pageable);
 
-        return ResponseEntity.status(HttpStatus.OK).body(userPage.map(outsideUserMapper::toDTO));
+        return ResponseEntity.status(HttpStatus.OK)
+                .header("Access-Control-Allow-Origin", "*")
+                .body(userPage.map(outsideUserMapper::toDTO));
     }
 
     public void updateOutsideUser(Long id, OutsideUserDTO outsideUserDTO) {

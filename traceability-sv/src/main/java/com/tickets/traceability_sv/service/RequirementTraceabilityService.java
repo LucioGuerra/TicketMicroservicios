@@ -52,6 +52,8 @@ public class RequirementTraceabilityService {
                         .map(trace -> modelMapper.map(trace, GetTraceabilityDTO.class))
                         .toList();
 
-        return ResponseEntity.status(HttpStatus.OK).body(traceabilityDTO);
+        return ResponseEntity.status(HttpStatus.OK)
+                .header("Access-Control-Allow-Origin", "*")
+                .body(traceabilityDTO);
     }
 }

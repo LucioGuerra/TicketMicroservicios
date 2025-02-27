@@ -43,7 +43,9 @@ public class CommentService {
         comment.setFiles(sanitizedFiles);
 
         commentRepository.save(comment);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .header("Access-Control-Allow-Origin", "*")
+                .build();
     }
 
     public ResponseEntity<GetCommentDTO> getCommentById(Long id) {
@@ -63,7 +65,9 @@ public class CommentService {
 
         //todo: recuperar los datos minimos del usuario
 
-        return ResponseEntity.status(HttpStatus.OK).body(commentsDTO);
+        return ResponseEntity.status(HttpStatus.OK)
+                .header("Access-Control-Allow-Origin", "*")
+                .body(commentsDTO);
     }
 
     public ResponseEntity<Void> deleteComment(Long id) {
@@ -73,7 +77,9 @@ public class CommentService {
         comment.setDeleted(true);
         commentRepository.save(comment);
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .header("Access-Control-Allow-Origin", "*")
+                .build();
     }
 
     public ResponseEntity<Void> updateComment(Long id, UpdateCommentDTO updateCommentDTO){
@@ -90,7 +96,9 @@ public class CommentService {
 
         commentRepository.save(comment);
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .header("Access-Control-Allow-Origin", "*")
+                .build();
     }
 
     public ResponseEntity<Void> deleteFile(Long id, List<String> fileNames) {
@@ -111,7 +119,9 @@ public class CommentService {
 
         commentRepository.save(comment);
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .header("Access-Control-Allow-Origin", "*")
+                .build();
     }
 
     public ResponseEntity<Void> uploadFiles(Long id, List<MultipartFile> files) {
@@ -128,6 +138,8 @@ public class CommentService {
 
         commentRepository.save(comment);
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .header("Access-Control-Allow-Origin", "*")
+                .build();
     }
 }

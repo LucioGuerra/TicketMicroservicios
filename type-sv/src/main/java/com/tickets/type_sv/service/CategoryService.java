@@ -44,19 +44,25 @@ public class CategoryService {
         category.setType(type);
 
         categoryRepository.save(category);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .header("Access-Control-Allow-Origin", "*")
+                .build();
     }
 
     public ResponseEntity<GetCategoryDTO> getCategoryById(Long id) {
         Category category = categoryRepository.findByIdAndNotDeleted(id).orElseThrow(() -> new EntityNotFoundException("Category not found with id: " + id));
         GetCategoryDTO categoryDTO = modelMapper.map(category, GetCategoryDTO.class);
-        return ResponseEntity.status(HttpStatus.OK).body(categoryDTO);
+        return ResponseEntity.status(HttpStatus.OK)
+                .header("Access-Control-Allow-Origin", "*")
+                .body(categoryDTO);
     }
 
     public ResponseEntity<List<GetCategoryDTO>> getAllCategories() {
         List<Category> categories = categoryRepository.findAllNotDeleted();
         List<GetCategoryDTO> categoriesDTOs = categories.stream().map(category -> modelMapper.map(category, GetCategoryDTO.class)).toList();
-        return ResponseEntity.status(HttpStatus.OK).body(categoriesDTOs);
+        return ResponseEntity.status(HttpStatus.OK)
+                .header("Access-Control-Allow-Origin", "*")
+                .body(categoriesDTOs);
     }
 
     public ResponseEntity<Void> updateCategory(Long id, UpdateCategoryDTO categoryDTO) {
@@ -72,7 +78,9 @@ public class CategoryService {
         }
 
         categoryRepository.save(category);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .header("Access-Control-Allow-Origin", "*")
+                .build();
     }
 
     @Transactional
@@ -86,7 +94,9 @@ public class CategoryService {
         category.setDeleted(true);
         categoryRepository.save(category);
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .header("Access-Control-Allow-Origin", "*")
+                .build();
     }
 
     public ResponseEntity<Boolean> validateCategory(Long id) {
@@ -94,6 +104,8 @@ public class CategoryService {
                 .map(category -> !category.getDeleted())
                 .orElse(false);
 
-        return ResponseEntity.status(HttpStatus.OK).body(exists);
+        return ResponseEntity.status(HttpStatus.OK)
+                .header("Access-Control-Allow-Origin", "*")
+                .body(exists);
     }
 }

@@ -69,7 +69,9 @@ public class RequirementService {
 
         this.sendRequirementTraceabilityEvent(Action.CREATE, requirement.getCode(), requirement.getCreatorId(), email);
         requirementRepository.save(requirement);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .header("Access-Control-Allow-Origin", "*")
+                .build();
     }
 
     private void sendRequirementTraceabilityEvent(Action action, String code, Long userId, String userEmail) {
@@ -109,7 +111,9 @@ public class RequirementService {
             requirementDTO.setFiles(downloadUrls);
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(requirementDTO);
+        return ResponseEntity.status(HttpStatus.OK)
+                .header("Access-Control-Allow-Origin", "*")
+                .body(requirementDTO);
     }
 
     public ResponseEntity<Page<GetRequirementDTO>> getAllRequirements(String subject, Long typeId, Long creatorId,
@@ -135,7 +139,9 @@ public class RequirementService {
                 GetRequirementDTO.class));
 
 
-        return ResponseEntity.status(HttpStatus.OK).body(requirementDTOs);
+        return ResponseEntity.status(HttpStatus.OK)
+                .header("Access-Control-Allow-Origin", "*")
+                .body(requirementDTOs);
     }
 
     public ResponseEntity<Void> updateRequirement(UpdateRequirementDTO updateRequirementDTO, Long id) {
@@ -155,14 +161,18 @@ public class RequirementService {
         }
 
         requirementRepository.save(requirementToUpdate);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .header("Access-Control-Allow-Origin", "*")
+                .build();
     }
 
     public ResponseEntity<Void> deleteRequirement(Long id) {
         Requirement requirement = this.getRequirementByIdAndNotDeleted(id);
         requirement.setIsDeleted(true);
         requirementRepository.save(requirement);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .header("Access-Control-Allow-Origin", "*")
+                .build();
     }
 
     public ResponseEntity<Void> assignRequirement(Long id, Long assigneeId) {
@@ -183,7 +193,9 @@ public class RequirementService {
                 "ejemplo@ejemplo.com");
         requirementRepository.save(requirement);
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .header("Access-Control-Allow-Origin", "*")
+                .build();
     }
 
     public ResponseEntity<Void> closeRequirement(Long id) {
@@ -199,7 +211,9 @@ public class RequirementService {
                 "ejemplo@ejemplo.com");
         requirementRepository.save(requirement);
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .header("Access-Control-Allow-Origin", "*")
+                .build();
     }
 
     public ResponseEntity<Void> deleteFile(Long id, List<String> fileNames) {
@@ -219,7 +233,9 @@ public class RequirementService {
 
         requirementRepository.save(requirement);
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .header("Access-Control-Allow-Origin", "*")
+                .build();
     }
 
     public ResponseEntity<Void> uploadFiles(Long id, List<MultipartFile> files) {
@@ -235,7 +251,9 @@ public class RequirementService {
 
         requirementRepository.save(requirement);
 
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .header("Access-Control-Allow-Origin", "*")
+                .build();
     }
 
 

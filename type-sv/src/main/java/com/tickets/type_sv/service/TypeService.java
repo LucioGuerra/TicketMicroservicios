@@ -29,19 +29,25 @@ public class TypeService {
     public ResponseEntity<Void> createType(TypeDTO typeDTO) {
         Type type = modelMapper.map(typeDTO, Type.class);
         typeRepository.save(type);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .header("Access-Control-Allow-Origin", "*")
+                .build();
     }
 
     public ResponseEntity<GetTypeDTO> getTypeDTOById(Long id) {
         Type type = typeRepository.findByIdAndNotDeleted(id).orElseThrow(() -> new EntityNotFoundException("Type not found with id: " + id));
         GetTypeDTO typeDTO= modelMapper.map(type, GetTypeDTO.class);
-        return ResponseEntity.status(HttpStatus.OK).body(typeDTO);
+        return ResponseEntity.status(HttpStatus.OK)
+                .header("Access-Control-Allow-Origin", "*")
+                .body(typeDTO);
     }
 
     public ResponseEntity<List<GetTypeDTO>> getAllTypes() {
         List<Type> types = typeRepository.findAllAndNotDeleted();
         List<GetTypeDTO> typesDTOs = types.stream().map(type -> modelMapper.map(type, GetTypeDTO.class)).toList();
-        return ResponseEntity.status(HttpStatus.OK).body(typesDTOs);
+        return ResponseEntity.status(HttpStatus.OK)
+                .header("Access-Control-Allow-Origin", "*")
+                .body(typesDTOs);
     }
 
     public ResponseEntity<Void> updateType(Long id, UpdateTypeDTO typeDTO) {
@@ -55,7 +61,9 @@ public class TypeService {
         }
 
         typeRepository.save(type);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .header("Access-Control-Allow-Origin", "*")
+                .build();
     }
 
     @Transactional
@@ -71,14 +79,18 @@ public class TypeService {
         type.setDeleted(true);
         typeRepository.save(type);
 
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.OK)
+                .header("Access-Control-Allow-Origin", "*")
+                .build();
     }
 
     public ResponseEntity<Boolean> validateType(Long id) {
         boolean exists = typeRepository.findByIdAndNotDeleted(id)
                 .map(category -> !category.getDeleted())
                 .orElse(false);
-        return ResponseEntity.status(HttpStatus.OK).body(exists);
+        return ResponseEntity.status(HttpStatus.OK)
+                .header("Access-Control-Allow-Origin", "*")
+                .body(exists);
     }
 
     public Type getTypeById(Long id) {
