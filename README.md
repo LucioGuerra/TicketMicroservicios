@@ -102,9 +102,10 @@ KAFKA_URL=localhost:29092
 
 2. Crea los archivos `.env` y `.env-build` con las configuraciones mencionadas anteriormente.
 
-3. Asigna permisos de ejecución al script `run_all.sh`:
+3. Asigna permisos de ejecución al script `run_all.sh` e `insert_data.sh`:
 
    ```bash
+   chmod +x insert_data.sh
    chmod +x run_all.sh
    ```
 
