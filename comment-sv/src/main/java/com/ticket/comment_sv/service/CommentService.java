@@ -6,7 +6,9 @@ import com.ticket.comment_sv.dto.UpdateCommentDTO;
 import com.ticket.comment_sv.entity.Comment;
 import com.ticket.comment_sv.exception.TicketException;
 import com.ticket.comment_sv.external.model.Requirement;
+import com.ticket.comment_sv.external.model.User;
 import com.ticket.comment_sv.repository.CommentRepository;
+import com.ticket.comment_sv.repository.OutsideUserRepository;
 import com.ticket.comment_sv.repository.RequirementRepository;
 import com.ticket.shared.service.FileService;
 import lombok.AllArgsConstructor;
@@ -19,6 +21,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
@@ -28,10 +35,13 @@ public class CommentService {
     private final FileService fileService;
     private final ModelMapper modelMapper;
     private final RequirementRepository commentService;
+    private final OutsideUserRepository outsideUserRepository;
 
-    public ResponseEntity<Void> createComment(CommentDTO commentDTO, List<MultipartFile> files){
-        //todo: validar que existe el usuario
-
+    public ResponseEntity<GetCommentDTO> createComment(CommentDTO commentDTO, List<MultipartFile> files){
+        Optional<User> user = outsideUserRepository.getUserById(commentDTO.getUserId());
+        if (user.isEmpty()) {
+            throw new TicketException("USER_NOT_EXIST", "User not found with id: " + commentDTO.getUserId());
+        }
 
         if (commentService.validateRequirementById(commentDTO.getRequirementId())) {
             throw new TicketException("REQUIREMENT_NOT_FOUND", "Requirement not found");
@@ -45,14 +55,17 @@ public class CommentService {
         commentRepository.save(comment);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .header("Access-Control-Allow-Origin", "*")
-                .build();
+                .body(modelMapper.map(comment, GetCommentDTO.class));
     }
 
     public ResponseEntity<GetCommentDTO> getCommentById(Long id) {
         Comment comment = commentRepository.findById(id)
-                .orElseThrow(() -> new TicketException("COMMENT_NOT_FOUND", "Comment not found"));
+                .orElseThrow(() -> new TicketException("COMMENT_NOT_FOUND", "Comment not found with id: " + id));
 
-        //todo: recuperar los datos minimos del usuario
+        Optional<User> user = outsideUserRepository.getUserById(comment.getUserId());
+        if (user.isEmpty()) {
+            throw new TicketException("USER_NOT_EXIST", "User not found with id: " + comment.getUserId());
+        }
         //todo: recuperar los archivos si tiene
 
         return ResponseEntity.ok(modelMapper.map(comment, GetCommentDTO.class));
@@ -61,9 +74,20 @@ public class CommentService {
     public ResponseEntity<Page<GetCommentDTO>> getAllCommentsForRequirement(Long requirementId, Pageable pageable) {
         Page<Comment> comments = commentRepository.findAllByRequirementIdAndDeletedIsFalse(requirementId, pageable);
 
+        Set<Long> userIds = comments.stream()
+                .map(Comment::getUserId)
+                .collect(Collectors.toSet());
+
+        List<User> users = outsideUserRepository.getUsersByIds(userIds);
+
+        Map<Long, User> userMap = users.stream()
+                .collect(Collectors.toMap(User::getId, Function.identity()));
+
         Page<GetCommentDTO> commentsDTO = comments.map(comment -> modelMapper.map(comment, GetCommentDTO.class));
 
-        //todo: recuperar los datos minimos del usuario
+        for (GetCommentDTO commentDTO : commentsDTO) {
+            commentDTO.setUser(userMap.get(commentDTO.getUser().getId()));
+        }
 
         return ResponseEntity.status(HttpStatus.OK)
                 .header("Access-Control-Allow-Origin", "*")
