@@ -12,6 +12,6 @@ import java.util.Optional;
 @FeignClient(name = "user-sv", fallbackFactory = OutsideUserFallback.class)
 public interface OutsideUserRepository {
 
-    @GetMapping("/apí/v1/users/{id}")
+    @GetMapping("/apí/v1/outside-users/{id}")
     Optional<User> getOutsideUserById(@PathVariable Long id);
 }

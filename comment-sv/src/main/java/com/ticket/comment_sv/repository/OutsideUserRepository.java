@@ -12,10 +12,10 @@ import java.util.Set;
 @FeignClient(name = "user-sv", fallbackFactory = OutsideUserFallback.class)
 public interface OutsideUserRepository {
 
-    @GetMapping("/api/v1/users/{id}")
+    @GetMapping("/api/v1/outside-users/{id}")
     Optional<User> getUserById(Long id);
 
-    @GetMapping("/api/v1/users/ids")
+    @GetMapping("/api/v1/outside-users/ids")
     List<User> getUsersByIds(Set<Long> ids);
 
 }

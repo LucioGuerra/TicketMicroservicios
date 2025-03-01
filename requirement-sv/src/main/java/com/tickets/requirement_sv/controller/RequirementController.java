@@ -30,7 +30,7 @@ public class RequirementController {
 
 
    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> createRequirement(@RequestPart("requirement") @Valid RequirementDTO requirementDTO,
+    public ResponseEntity<GetRequirementDTO> createRequirement(@RequestPart("requirement") @Valid RequirementDTO requirementDTO,
                                                   @RequestPart(value = "files", required = false) @MaxFileListSize(max = 5) List<MultipartFile> files) {
            return requirementService.createRequirement(requirementDTO, files);
     }

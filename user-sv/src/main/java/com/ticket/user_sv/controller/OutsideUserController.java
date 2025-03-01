@@ -10,6 +10,9 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Set;
+
 @RestController
 @RequestMapping("/api/v1/outside-users")
 public class OutsideUserController {
@@ -26,6 +29,11 @@ public class OutsideUserController {
     @GetMapping("/{id}")
     public ResponseEntity<GetOutsideUserDTO> getOutsideUserById(@PathVariable Long id) {
         return outsideUserService.getOutsideUserById(id);
+    }
+
+    @GetMapping("/ids")
+    public ResponseEntity<List<GetOutsideUserDTO>> getOutsideUserByIds(@RequestParam Set<Long> ids) {
+        return outsideUserService.getOutsideUserByIds(ids);
     }
 
     // Obtener todos los usuarios activos

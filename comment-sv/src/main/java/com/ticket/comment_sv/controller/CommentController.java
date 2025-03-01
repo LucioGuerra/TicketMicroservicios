@@ -24,7 +24,7 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping
-    public ResponseEntity<Void> createComment(@RequestPart("comment") CommentDTO commentDTO,
+    public ResponseEntity<GetCommentDTO> createComment(@RequestPart("comment") CommentDTO commentDTO,
                                               @RequestPart(value = "files", required = false) List<MultipartFile> files) {
         return commentService.createComment(commentDTO, files);
     }

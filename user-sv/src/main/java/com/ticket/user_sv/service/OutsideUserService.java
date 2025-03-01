@@ -16,6 +16,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Set;
+
 @AllArgsConstructor
 @Service
 public class OutsideUserService {
@@ -94,5 +97,10 @@ public class OutsideUserService {
         user.setActive(false);
         outsideUserRepository.save(user);
     }
-    
+
+    public ResponseEntity<List<GetOutsideUserDTO>> getOutsideUserByIds(Set<Long> ids) {
+        List<OutsideUser> users = outsideUserRepository.findAllById(ids);
+        List<GetOutsideUserDTO> responseDTO = users.stream().map(outsideUserMapper::toDTO).toList();
+        return ResponseEntity.ok(responseDTO);
+    }
 }

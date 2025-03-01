@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Component
 public class OutsideUserFallback implements FallbackFactory<OutsideUserRepository> {
@@ -26,7 +27,7 @@ public class OutsideUserFallback implements FallbackFactory<OutsideUserRepositor
             }
 
             @Override
-            public List<User> getUsersByIds(List<Long> ids) {
+            public List<User> getUsersByIds(Set<Long> ids) {
                 return List.of();
             }
         };
