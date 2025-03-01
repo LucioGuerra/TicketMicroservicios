@@ -12,7 +12,9 @@ import com.tickets.requirement_sv.event.RequirementTraceabilityEvent;
 import com.tickets.requirement_sv.exception.TicketException;
 import com.tickets.requirement_sv.external.model.Category;
 import com.tickets.requirement_sv.external.model.Type;
+import com.tickets.requirement_sv.external.model.User;
 import com.tickets.requirement_sv.repository.CategoryRepository;
+import com.tickets.requirement_sv.repository.OutsideUserRepository;
 import com.tickets.requirement_sv.repository.RequirementRepository;
 import com.tickets.requirement_sv.repository.TypeRepository;
 import com.tickets.requirement_sv.specification.RequirementSpecification;
@@ -33,6 +35,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 
 @AllArgsConstructor
 @Service
@@ -42,11 +45,12 @@ public class RequirementService {
     private final CategoryRepository categoryRepository;
     private final ModelMapper modelMapper;
     private final TypeRepository typeRepository;
+    private final OutsideUserRepository outsideUserRepository;
     private final KafkaTemplate<String, RequirementTraceabilityEvent> kafkaTemplate;
     private final FileService fileService;
 
 
-    public ResponseEntity<Void> createRequirement(RequirementDTO requirementDTO, List<MultipartFile> files) {
+    public ResponseEntity<GetRequirementDTO> createRequirement(RequirementDTO requirementDTO, List<MultipartFile> files) {
         Requirement requirement = modelMapper.map(requirementDTO, Requirement.class);
 
         if(!requirement.getRequirements().isEmpty()){
@@ -58,20 +62,21 @@ public class RequirementService {
         if(!category.getType().getId().equals(requirementDTO.getTypeId())){
             throw new TicketException("TYPE_NOT_MATCH_CATEGORY", "The type does not match the category");
         }
-        //todo: Validar el id del user creador y traer su email
-        String email = "Lfuere@example.com";
-
+        Optional<User> user = outsideUserRepository.getOutsideUserById(requirement.getCreatorId());
+        if(user.isEmpty()){
+            throw new TicketException("USER_NOT_EXIST", "user does not exist");
+        }
 
         requirement.setCode(this.generateCode(category.getType().getCode()));
 
         List<String> sanitizedFiles = fileService.uploadFiles(files);
         requirement.setFiles(sanitizedFiles);
 
-        this.sendRequirementTraceabilityEvent(Action.CREATE, requirement.getCode(), requirement.getCreatorId(), email);
+        this.sendRequirementTraceabilityEvent(Action.CREATE, requirement.getCode(), requirement.getCreatorId(), user.get().getEmail());
         requirementRepository.save(requirement);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .header("Access-Control-Allow-Origin", "*")
-                .build();
+                .body(modelMapper.map(requirement, GetRequirementDTO.class));
     }
 
     private void sendRequirementTraceabilityEvent(Action action, String code, Long userId, String userEmail) {
@@ -88,10 +93,21 @@ public class RequirementService {
 
         requirementDTO.setCategory(categoryRepository.getCategoryById(requirement.getCategoryId()));
         requirementDTO.setType(typeRepository.getTypeById(requirement.getTypeId()));
-        //todo: setear usuario creador
+
+        Optional<User> creator = outsideUserRepository.getOutsideUserById(requirement.getCreatorId());
+        if(creator.isEmpty()){
+            throw new TicketException("CREATOR_NOT_EXIST", "creator user does not exist");
+        }
+        requirementDTO.setCreator(creator.get());
 
         if(requirement.getAssigneeId() != null){
             //todo: setear el usuario asignado
+            //Optional<User> assignee = outsideUserRepository.getOutsideUserById(requirement.getAssigneeId());
+            User assignee = new User();
+            assignee.setId(1L);
+            assignee.setUsername("Usuario");
+            assignee.setName("usuario interno mockeado");
+            assignee.setEmail("mock@mock.com");
         }
 
         if(!requirement.getRequirements().isEmpty()){
@@ -178,7 +194,12 @@ public class RequirementService {
     public ResponseEntity<Void> assignRequirement(Long id, Long assigneeId) {
         Requirement requirement = this.getRequirementByIdAndNotDeleted(id);
 
-        //todo: Validar que el usuario exista y sea un usuario interno
+        //Optional<User> assignee = outsideUserRepository.getOutsideUserById(assigneeId);
+        User assignee = new User();
+        assignee.setId(1L);
+        assignee.setUsername("Usuario");
+        assignee.setName("usuario interno mockeado");
+        assignee.setEmail("mock@mock.com");
 
         if (requirement.getState() == State.CLOSED) {
             throw new TicketException("REQUIREMENT_ALREADY_CLOSED", "The requirement is already closed");
@@ -189,8 +210,8 @@ public class RequirementService {
 
         requirement.setAssigneeId(assigneeId);
         requirement.setState(State.ASSIGNED);
-        this.sendRequirementTraceabilityEvent(Action.ASSIGN, requirement.getCode(), requirement.getAssigneeId(),
-                "ejemplo@ejemplo.com");
+        this.sendRequirementTraceabilityEvent(Action.ASSIGN, requirement.getCode(), assignee.getId(),
+                assignee.getEmail());
         requirementRepository.save(requirement);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
@@ -205,10 +226,15 @@ public class RequirementService {
             throw new TicketException("REQUIREMENT_ALREADY_CLOSED", "The requirement is already closed");
         }
 
+        User assignee = new User();
+        assignee.setId(1L);
+        assignee.setUsername("Usuario");
+        assignee.setName("usuario interno mockeado");
+        assignee.setEmail("mock@mock.com");
+
         requirement.setState(State.CLOSED);
-        //todo: Modificar la base de datos de traceability para que guarde las enum como un string
-        this.sendRequirementTraceabilityEvent(Action.CLOSE, requirement.getCode(), requirement.getAssigneeId(),
-                "ejemplo@ejemplo.com");
+        this.sendRequirementTraceabilityEvent(Action.CLOSE, requirement.getCode(), assignee.getId(),
+                assignee.getEmail());
         requirementRepository.save(requirement);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT)

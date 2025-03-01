@@ -26,6 +26,7 @@ public class RequirementTraceability {
     @Column(nullable = false)
     private String Email;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Action action;
 
