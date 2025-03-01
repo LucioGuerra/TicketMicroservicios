@@ -80,6 +80,19 @@ public class FileService {
         );
     }
 
+    public String getContentType(String fileName) {
+        try {
+            return minioClient.statObject(
+                    StatObjectArgs.builder()
+                            .bucket(bucketName)
+                            .object(fileName)
+                            .build()
+            ).contentType();
+        } catch (Exception e) {
+            throw ticketException.apply("FILE_NOT_FOUND", "File not found");
+        }
+    }
+
     private String getSanitizeFileName(MultipartFile file) {
         if (file.getOriginalFilename() == null) {
             throw new RuntimeException("File name is null");

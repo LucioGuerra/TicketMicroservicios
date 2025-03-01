@@ -23,6 +23,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -273,7 +274,15 @@ public class RequirementService {
 
     public ResponseEntity<byte[]> downloadFile(String fileName) {
         byte[] file = fileService.downloadFile(fileName);
+        String contentType = fileService.getContentType(fileName);
+
+        if (contentType == null || contentType.isBlank()) {
+            contentType = "application/octet-stream";
+        }
+
+
         return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
                 .header("Access-Control-Allow-Origin", "*")
                 .header("Content-Disposition", "attachment; filename=" + fileName)
                 .body(file);

@@ -29,7 +29,7 @@ public class RequirementController {
     private final RequirementService requirementService;
 
 
-   @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<GetRequirementDTO> createRequirement(@RequestPart("requirement") @Valid RequirementDTO requirementDTO,
                                                   @RequestPart(value = "files", required = false) @MaxFileListSize(max = 5) List<MultipartFile> files) {
            return requirementService.createRequirement(requirementDTO, files);
@@ -84,7 +84,7 @@ public class RequirementController {
         return requirementService.uploadFiles(id, files);
     }
 
-    @GetMapping("/files")
+    @GetMapping(path = "/files", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<byte[]> getFiles(@RequestParam("fileName") String fileName) {
         return requirementService.downloadFile(fileName);
     }

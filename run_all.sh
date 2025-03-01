@@ -57,4 +57,14 @@ set +a
 
 docker-compose up -d
 
+echo "Esperamos unos segundos para que MinIO esté operativo..."
+sleep 10
+
+echo "Creando buckets en MinIO..."
+docker-compose exec minio mc alias set local http://127.0.0.1:9000 "$MINIO_ACCESS_KEY" "$MINIO_SECRET_KEY"
+docker-compose exec minio mc mb local/comments
+docker-compose exec minio mc mb local/requirements
+
+echo "Buckets creados."
+
 echo "Todos los servicios han sido compilados exitosamente."
