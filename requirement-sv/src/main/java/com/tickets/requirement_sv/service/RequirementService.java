@@ -11,12 +11,10 @@ import com.tickets.requirement_sv.event.Action;
 import com.tickets.requirement_sv.event.RequirementTraceabilityEvent;
 import com.tickets.requirement_sv.exception.TicketException;
 import com.tickets.requirement_sv.external.model.Category;
-import com.tickets.requirement_sv.external.model.Type;
 import com.tickets.requirement_sv.external.model.User;
-import com.tickets.requirement_sv.repository.CategoryRepository;
-import com.tickets.requirement_sv.repository.OutsideUserRepository;
+import com.tickets.requirement_sv.repository.feign.OutsideUserRepository;
 import com.tickets.requirement_sv.repository.RequirementRepository;
-import com.tickets.requirement_sv.repository.TypeRepository;
+import com.tickets.requirement_sv.repository.feign.TypeRepository;
 import com.tickets.requirement_sv.specification.RequirementSpecification;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
@@ -31,8 +29,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -42,7 +38,6 @@ import java.util.Optional;
 public class RequirementService {
 
     private final RequirementRepository requirementRepository;
-    private final CategoryRepository categoryRepository;
     private final ModelMapper modelMapper;
     private final TypeRepository typeRepository;
     private final OutsideUserRepository outsideUserRepository;
@@ -57,7 +52,7 @@ public class RequirementService {
             requirement.setRequirements(requirementRepository.findAllByIdsAndNotDeleted(requirementDTO.getRequirements()));
         }
 
-        Category category = categoryRepository.getCategoryById(requirementDTO.getCategoryId());
+        Category category = typeRepository.getCategoryById(requirementDTO.getCategoryId());
 
         if(!category.getType().getId().equals(requirementDTO.getTypeId())){
             throw new TicketException("TYPE_NOT_MATCH_CATEGORY", "The type does not match the category");
@@ -91,7 +86,7 @@ public class RequirementService {
 
         GetRequirementDTO requirementDTO = modelMapper.map(requirement, GetRequirementDTO.class);
 
-        requirementDTO.setCategory(categoryRepository.getCategoryById(requirement.getCategoryId()));
+        requirementDTO.setCategory(typeRepository.getCategoryById(requirement.getCategoryId()));
         requirementDTO.setType(typeRepository.getTypeById(requirement.getTypeId()));
 
         Optional<User> creator = outsideUserRepository.getOutsideUserById(requirement.getCreatorId());
@@ -101,7 +96,6 @@ public class RequirementService {
         requirementDTO.setCreator(creator.get());
 
         if(requirement.getAssigneeId() != null){
-            //todo: setear el usuario asignado
             //Optional<User> assignee = outsideUserRepository.getOutsideUserById(requirement.getAssigneeId());
             User assignee = new User();
             assignee.setId(1L);

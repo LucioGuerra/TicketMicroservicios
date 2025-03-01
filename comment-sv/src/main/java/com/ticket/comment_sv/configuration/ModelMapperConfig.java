@@ -48,16 +48,6 @@ public class ModelMapperConfig {
                 map().setSubject(source.getSubject());
                 map().setCreatedAt(source.getCreatedAt());
 
-                using(ctx -> { //todo: testear este mapeo
-                    List<String> filesURL = new ArrayList<>();
-                    if (!source.getFiles().isEmpty()){
-                        for (String file : source.getFiles()){
-                            filesURL.add(fileService.downloadFile(file));
-                        }
-                    }
-                    return filesURL;
-                }).map(source.getFiles(), destination.getFiles());
-
                 skip(destination.getUser());
             }
         });

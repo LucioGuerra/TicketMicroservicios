@@ -1,4 +1,5 @@
 com\ticket\user_sv\DTO\response\GetOutsideUserDTO.class
+com\ticket\user_sv\handler\GlobalExceptionHandler.class
 com\ticket\user_sv\service\OutsideUserService.class
 com\ticket\user_sv\mapper\OutsideUserMapper.class
 com\ticket\user_sv\mapper\OutsideUserMapperImpl.class
@@ -6,7 +7,9 @@ com\ticket\user_sv\configuration\SecurityConfig.class
 com\ticket\user_sv\repository\OutsideUserRepository.class
 com\ticket\user_sv\configuration\SecurityConfig$1.class
 com\ticket\user_sv\controller\OutsideUserController.class
+com\ticket\user_sv\exception\TicketException.class
 com\ticket\user_sv\DTO\request\OutsideUserDTO.class
+com\ticket\user_sv\DTO\response\ApiError.class
 com\ticket\user_sv\specification\UserSpecification.class
 com\ticket\user_sv\entity\OutsideUser.class
 com\ticket\user_sv\UserSvApplication.class
