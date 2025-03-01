@@ -84,4 +84,9 @@ public class RequirementController {
         return requirementService.uploadFiles(id, files);
     }
 
+    @GetMapping("/files")
+    public ResponseEntity<byte[]> getFiles(@RequestParam("fileName") String fileName) {
+        return requirementService.downloadFile(fileName);
+    }
+
 }

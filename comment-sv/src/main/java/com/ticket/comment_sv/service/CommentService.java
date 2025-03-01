@@ -66,9 +66,14 @@ public class CommentService {
         if (user.isEmpty()) {
             throw new TicketException("USER_NOT_EXIST", "User not found with id: " + comment.getUserId());
         }
-        //todo: recuperar los archivos si tiene
 
-        return ResponseEntity.ok(modelMapper.map(comment, GetCommentDTO.class));
+        GetCommentDTO commentDTO = modelMapper.map(comment, GetCommentDTO.class);
+
+        if (!comment.getFiles().isEmpty()){
+            commentDTO.setFiles(comment.getFiles());
+        }
+
+        return ResponseEntity.ok(commentDTO);
     }
 
     public ResponseEntity<Page<GetCommentDTO>> getAllCommentsForRequirement(Long requirementId, Pageable pageable) {
@@ -165,5 +170,13 @@ public class CommentService {
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .header("Access-Control-Allow-Origin", "*")
                 .build();
+    }
+
+    public ResponseEntity<byte[]> downloadFile(String fileName) {
+        byte[] file = fileService.downloadFile(fileName);
+        return ResponseEntity.ok()
+                .header("Access-Control-Allow-Origin", "*")
+                .header("Content-Disposition", "attachment; filename=" + fileName)
+                .body(file);
     }
 }

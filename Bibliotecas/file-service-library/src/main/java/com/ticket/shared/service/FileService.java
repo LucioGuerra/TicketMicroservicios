@@ -1,9 +1,6 @@
 package com.ticket.shared.service;
 
-import io.minio.GetPresignedObjectUrlArgs;
-import io.minio.MinioClient;
-import io.minio.PutObjectArgs;
-import io.minio.RemoveObjectArgs;
+import io.minio.*;
 import io.minio.http.Method;
 import lombok.SneakyThrows;
 import lombok.Value;
@@ -64,15 +61,13 @@ public class FileService {
     }
 
     @SneakyThrows
-    public String downloadFile(String fileName) {
-        return minioClient.getPresignedObjectUrl(
-                GetPresignedObjectUrlArgs.builder()
-                        .method(Method.GET)
+    public byte[] downloadFile(String fileName) {
+        return minioClient.getObject(
+                GetObjectArgs
+                        .builder()
                         .bucket(bucketName)
                         .object(fileName)
-                        .expiry(60 * 60)
-                        .build()
-        );
+                        .build()).readAllBytes();
     }
 
     @SneakyThrows

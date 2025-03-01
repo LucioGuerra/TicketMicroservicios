@@ -61,4 +61,9 @@ public class CommentController {
                                             @RequestPart("files") @MaxFileListSize List<MultipartFile> files) {
         return commentService.uploadFiles(id, files);
     }
+
+    @GetMapping("/files")
+    public ResponseEntity<byte[]> getFiles(@RequestParam("fileName") String fileName) {
+        return commentService.downloadFile(fileName);
+    }
 }

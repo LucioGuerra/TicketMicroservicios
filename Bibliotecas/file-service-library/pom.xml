@@ -30,4 +30,22 @@
       <version>6.2.1</version>
     </dependency>
   </dependencies>
+  <build>
+    <plugins>
+      <!-- Plugin para compilar el código Java -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.13.0</version>
+        <configuration>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+          <!-- Sólo para que no emita warnings de 'release' -->
+          <release>17</release>
+        </configuration>
+      </plugin>
+
+      <!-- Otros plugins que necesites -->
+    </plugins>
+  </build>
 </project>

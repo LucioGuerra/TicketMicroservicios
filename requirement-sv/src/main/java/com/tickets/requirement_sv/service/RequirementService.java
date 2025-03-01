@@ -119,12 +119,7 @@ public class RequirementService {
         }
 
         if (!requirement.getFiles().isEmpty()) {
-            List<String> downloadUrls = new ArrayList<>();
-            for (String file : requirement.getFiles()) {
-                downloadUrls.add(fileService.downloadFile(file));
-            }
-            System.err.println(downloadUrls);
-            requirementDTO.setFiles(downloadUrls);
+            requirementDTO.setFiles(requirement.getFiles());
         }
 
         return ResponseEntity.status(HttpStatus.OK)
@@ -280,6 +275,14 @@ public class RequirementService {
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .header("Access-Control-Allow-Origin", "*")
                 .build();
+    }
+
+    public ResponseEntity<byte[]> downloadFile(String fileName) {
+        byte[] file = fileService.downloadFile(fileName);
+        return ResponseEntity.ok()
+                .header("Access-Control-Allow-Origin", "*")
+                .header("Content-Disposition", "attachment; filename=" + fileName)
+                .body(file);
     }
 
 
