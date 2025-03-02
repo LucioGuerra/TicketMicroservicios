@@ -117,8 +117,10 @@ public class RequirementService {
             requirementDTO.setFiles(requirement.getFiles());
         }
 
+        requirementDTO.setCreatedAt(requirement.getCreatedAt().toLocalDate());
+        requirementDTO.setCreatedTime(requirement.getCreatedAt().toLocalTime());
+
         return ResponseEntity.status(HttpStatus.OK)
-                
                 .body(requirementDTO);
     }
 
