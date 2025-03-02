@@ -67,6 +67,7 @@ services:
       context: ./api-gateway
     environment:
       EUREKA_URL: "eureka-sv:8761"
+      ISSUER_URI: ${ISSUER_URI}
     ports:
       - "443:443"
     volumes:
@@ -92,6 +93,7 @@ services:
       MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
       MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
       MINIO_BUCKET: "comments"
+      ISSUER_URI: ${ISSUER_URI}
     volumes:
       - ${COMMENT_DIR}/coment-sv-0.0.1-SNAPSHOT.jar:/app/app.jar
     networks:
@@ -124,6 +126,7 @@ services:
       EUREKA_URL: ${EUREKA_URL}
       KAFKA_URL: ${KAFKA_URL}
       MINIO_URL: ${MINIO_URL}
+      ISSUER_URI: ${ISSUER_URI}
       MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
       MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
       MINIO_BUCKET: "requirements"
@@ -143,6 +146,7 @@ services:
       DB_USER: ${DB_USER}
       DB_PASSWORD: ${DB_PASSWORD}
       DB_URL: ${DB_URL}
+      ISSUER_URI: ${ISSUER_URI}
       DB_NAME: "traceability_db"
       EUREKA_URL: ${EUREKA_URL}
       KAFKA_URL: ${KAFKA_URL}
@@ -164,6 +168,7 @@ services:
       DB_URL: ${DB_URL}
       DB_NAME: "type_db"
       EUREKA_URL: ${EUREKA_URL}
+      ISSUER_URI: ${ISSUER_URI}
     volumes:
       - ${TYPE_DIR}/type-sv-0.0.1-SNAPSHOT.jar:/app/app.jar
     networks:
@@ -182,6 +187,7 @@ services:
       DB_URL: ${DB_URL}
       DB_NAME: "user_db"
       EUREKA_URL: ${EUREKA_URL}
+      ISSUER_URI: ${ISSUER_URI}
     volumes:
       - ${USER_DIR}/user-sv-0.0.1-SNAPSHOT.jar:/app/app.jar
     networks:

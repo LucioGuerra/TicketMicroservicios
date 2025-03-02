@@ -30,7 +30,7 @@ public class TypeService {
         Type type = modelMapper.map(typeDTO, Type.class);
         typeRepository.save(type);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .header("Access-Control-Allow-Origin", "*")
+                
                 .build();
     }
 
@@ -38,7 +38,7 @@ public class TypeService {
         Type type = typeRepository.findByIdAndNotDeleted(id).orElseThrow(() -> new EntityNotFoundException("Type not found with id: " + id));
         GetTypeDTO typeDTO= modelMapper.map(type, GetTypeDTO.class);
         return ResponseEntity.status(HttpStatus.OK)
-                .header("Access-Control-Allow-Origin", "*")
+                
                 .body(typeDTO);
     }
 
@@ -46,7 +46,7 @@ public class TypeService {
         List<Type> types = typeRepository.findAllAndNotDeleted();
         List<GetTypeDTO> typesDTOs = types.stream().map(type -> modelMapper.map(type, GetTypeDTO.class)).toList();
         return ResponseEntity.status(HttpStatus.OK)
-                .header("Access-Control-Allow-Origin", "*")
+                
                 .body(typesDTOs);
     }
 
@@ -62,7 +62,7 @@ public class TypeService {
 
         typeRepository.save(type);
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
-                .header("Access-Control-Allow-Origin", "*")
+                
                 .build();
     }
 
@@ -80,7 +80,7 @@ public class TypeService {
         typeRepository.save(type);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .header("Access-Control-Allow-Origin", "*")
+                
                 .build();
     }
 
@@ -89,7 +89,7 @@ public class TypeService {
                 .map(category -> !category.getDeleted())
                 .orElse(false);
         return ResponseEntity.status(HttpStatus.OK)
-                .header("Access-Control-Allow-Origin", "*")
+                
                 .body(exists);
     }
 

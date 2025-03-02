@@ -53,7 +53,7 @@ public class RequirementTraceabilityService {
                         .toList();
 
         return ResponseEntity.status(HttpStatus.OK)
-                .header("Access-Control-Allow-Origin", "*")
+                
                 .body(traceabilityDTO);
     }
 }

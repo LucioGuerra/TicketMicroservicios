@@ -71,7 +71,7 @@ public class RequirementService {
         this.sendRequirementTraceabilityEvent(Action.CREATE, requirement.getCode(), requirement.getCreatorId(), user.get().getEmail());
         requirementRepository.save(requirement);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .header("Access-Control-Allow-Origin", "*")
+                
                 .body(modelMapper.map(requirement, GetRequirementDTO.class));
     }
 
@@ -118,7 +118,7 @@ public class RequirementService {
         }
 
         return ResponseEntity.status(HttpStatus.OK)
-                .header("Access-Control-Allow-Origin", "*")
+                
                 .body(requirementDTO);
     }
 
@@ -146,7 +146,7 @@ public class RequirementService {
 
 
         return ResponseEntity.status(HttpStatus.OK)
-                .header("Access-Control-Allow-Origin", "*")
+                
                 .body(requirementDTOs);
     }
 
@@ -168,7 +168,7 @@ public class RequirementService {
 
         requirementRepository.save(requirementToUpdate);
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
-                .header("Access-Control-Allow-Origin", "*")
+                
                 .build();
     }
 
@@ -177,7 +177,7 @@ public class RequirementService {
         requirement.setIsDeleted(true);
         requirementRepository.save(requirement);
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
-                .header("Access-Control-Allow-Origin", "*")
+                
                 .build();
     }
 
@@ -205,7 +205,7 @@ public class RequirementService {
         requirementRepository.save(requirement);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
-                .header("Access-Control-Allow-Origin", "*")
+                
                 .build();
     }
 
@@ -228,7 +228,7 @@ public class RequirementService {
         requirementRepository.save(requirement);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
-                .header("Access-Control-Allow-Origin", "*")
+                
                 .build();
     }
 
@@ -250,7 +250,7 @@ public class RequirementService {
         requirementRepository.save(requirement);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
-                .header("Access-Control-Allow-Origin", "*")
+                
                 .build();
     }
 
@@ -268,7 +268,7 @@ public class RequirementService {
         requirementRepository.save(requirement);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
-                .header("Access-Control-Allow-Origin", "*")
+                
                 .build();
     }
 
@@ -283,7 +283,7 @@ public class RequirementService {
 
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(contentType))
-                .header("Access-Control-Allow-Origin", "*")
+                
                 .header("Content-Disposition", "attachment; filename=" + fileName)
                 .body(file);
     }

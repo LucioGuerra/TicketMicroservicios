@@ -45,7 +45,7 @@ public class CategoryService {
 
         categoryRepository.save(category);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .header("Access-Control-Allow-Origin", "*")
+                
                 .build();
     }
 
@@ -53,7 +53,7 @@ public class CategoryService {
         Category category = categoryRepository.findByIdAndNotDeleted(id).orElseThrow(() -> new EntityNotFoundException("Category not found with id: " + id));
         GetCategoryDTO categoryDTO = modelMapper.map(category, GetCategoryDTO.class);
         return ResponseEntity.status(HttpStatus.OK)
-                .header("Access-Control-Allow-Origin", "*")
+                
                 .body(categoryDTO);
     }
 
@@ -61,7 +61,7 @@ public class CategoryService {
         List<Category> categories = categoryRepository.findAllNotDeleted();
         List<GetCategoryDTO> categoriesDTOs = categories.stream().map(category -> modelMapper.map(category, GetCategoryDTO.class)).toList();
         return ResponseEntity.status(HttpStatus.OK)
-                .header("Access-Control-Allow-Origin", "*")
+                
                 .body(categoriesDTOs);
     }
 
@@ -79,7 +79,7 @@ public class CategoryService {
 
         categoryRepository.save(category);
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
-                .header("Access-Control-Allow-Origin", "*")
+                
                 .build();
     }
 
@@ -95,7 +95,7 @@ public class CategoryService {
         categoryRepository.save(category);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
-                .header("Access-Control-Allow-Origin", "*")
+                
                 .build();
     }
 
@@ -105,7 +105,7 @@ public class CategoryService {
                 .orElse(false);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .header("Access-Control-Allow-Origin", "*")
+                
                 .body(exists);
     }
 }

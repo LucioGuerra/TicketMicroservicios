@@ -55,7 +55,7 @@ public class CommentService {
 
         commentRepository.save(comment);
         return ResponseEntity.status(HttpStatus.CREATED)
-                .header("Access-Control-Allow-Origin", "*")
+                
                 .body(modelMapper.map(comment, GetCommentDTO.class));
     }
 
@@ -96,7 +96,7 @@ public class CommentService {
         }
 
         return ResponseEntity.status(HttpStatus.OK)
-                .header("Access-Control-Allow-Origin", "*")
+                
                 .body(commentsDTO);
     }
 
@@ -108,7 +108,7 @@ public class CommentService {
         commentRepository.save(comment);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
-                .header("Access-Control-Allow-Origin", "*")
+                
                 .build();
     }
 
@@ -127,7 +127,7 @@ public class CommentService {
         commentRepository.save(comment);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
-                .header("Access-Control-Allow-Origin", "*")
+                
                 .build();
     }
 
@@ -150,7 +150,7 @@ public class CommentService {
         commentRepository.save(comment);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
-                .header("Access-Control-Allow-Origin", "*")
+                
                 .build();
     }
 
@@ -169,7 +169,7 @@ public class CommentService {
         commentRepository.save(comment);
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
-                .header("Access-Control-Allow-Origin", "*")
+                
                 .build();
     }
 
@@ -183,7 +183,7 @@ public class CommentService {
 
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(contentType))
-                .header("Access-Control-Allow-Origin", "*")
+                
                 .header("Content-Disposition", "attachment; filename=" + fileName)
                 .body(file);
     }
