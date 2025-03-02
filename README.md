@@ -44,6 +44,8 @@ MINIO_ACCESS_KEY=admin
 MINIO_SECRET_KEY=adminadmin
 MINIO_URL=minio:9000
 
+ISSUER_URI=https://dev-22vijuiwzcze21d0.us.auth0.com/
+
 # API Gateway
 GATEWAY_DIR=./api-gateway/target
 
@@ -87,6 +89,7 @@ DB_USER=postgres
 DB_PASSWORD=root
 DB_URL=localhost:5432
 KAFKA_URL=localhost:29092
+ISSUER_URI=https://dev-22vijuiwzcze21d0.us.auth0.com/
 ```
 
 ---
