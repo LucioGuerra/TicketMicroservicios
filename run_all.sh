@@ -6,10 +6,21 @@ set +a
 
 docker-compose up postgres -d
 
-cd Bibliotecas/file-service-library
-mvn clean install
-cd ..
-cd ..
+LIBRARIES=("file-service-library" "request-interceptor")
+
+for library in "${LIBRARIES[@]}"; do
+  echo "Compilando librería: $library"
+
+  if [ -d "Bibliotecas/$library" ]; then
+    cd Bibliotecas/"$library" || { echo "No se pudo acceder al directorio $library"; exit 1; }
+    mvn clean install || { echo "Error compilando $library"; exit 1; }
+    cd ..
+    cd ..
+  else
+    echo "El directorio $library no existe"
+  fi
+done
+
 
 SERVICES=("api-gateway" "comment-sv" "eureka-sv" "requirement-sv" "traceability-sv" "type-sv" "user-sv")
 
