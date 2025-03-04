@@ -300,4 +300,12 @@ public class RequirementService {
         return  typeCode + "-" + LocalDate.now().getYear() + "-" + String.format("%010d",
                 requirementRepository.count() + 1);
     }
+
+    public ResponseEntity<Boolean> validateRequirementById(Long id) {
+        Optional<Requirement> requirement = requirementRepository.findById(id);
+        if((requirement.isPresent()) && (!requirement.get().getIsDeleted())){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(true);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(false);
+    }
 }

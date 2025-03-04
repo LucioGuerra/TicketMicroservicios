@@ -53,6 +53,11 @@ public class RequirementController {
         return requirementService.getRequirementDTOById(id);
     }
 
+    @GetMapping("/{id}/validate")
+    public ResponseEntity<Boolean> validateRequirementById(@PathVariable Long id) {
+        return requirementService.validateRequirementById(id);
+    }
+
     @PatchMapping("/{id}")
     public ResponseEntity<Void> updateRequirement(@RequestBody @Valid UpdateRequirementDTO requirementDTO,
                                                   @PathVariable Long id) {
@@ -88,5 +93,7 @@ public class RequirementController {
     public ResponseEntity<byte[]> getFiles(@RequestParam("fileName") String fileName) {
         return requirementService.downloadFile(fileName);
     }
+
+
 
 }
