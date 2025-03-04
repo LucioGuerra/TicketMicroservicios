@@ -304,7 +304,7 @@ public class RequirementService {
     public ResponseEntity<Boolean> validateRequirementById(Long id) {
         Optional<Requirement> requirement = requirementRepository.findById(id);
         if((requirement.isPresent()) && (!requirement.get().getIsDeleted())){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(true);
+            return ResponseEntity.status(HttpStatus.OK).body(true);
         }
         return ResponseEntity.status(HttpStatus.OK).body(false);
     }
