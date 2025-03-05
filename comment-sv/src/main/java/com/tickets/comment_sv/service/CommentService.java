@@ -79,6 +79,11 @@ public class CommentService {
     }
 
     public ResponseEntity<Page<GetCommentDTO>> getAllCommentsForRequirement(Long requirementId, Pageable pageable) {
+
+        if (!commentService.validateRequirementById(requirementId)) {
+            throw new TicketException("REQUIREMENT_NOT_FOUND", "Requirement not found with id: " + requirementId);
+        }
+
         Page<Comment> comments = commentRepository.findAllByRequirementIdAndDeletedIsFalse(requirementId, pageable);
 
         Set<Long> userIds = comments.stream()
@@ -87,17 +92,22 @@ public class CommentService {
 
         List<User> users = outsideUserRepository.getUsersByIds(userIds);
 
+        if (users.isEmpty()){
+            throw new TicketException("USERS_NOT_FOUND", "Users not found");
+        }
+
         Map<Long, User> userMap = users.stream()
                 .collect(Collectors.toMap(User::getId, Function.identity()));
 
-        Page<GetCommentDTO> commentsDTO = comments.map(comment -> modelMapper.map(comment, GetCommentDTO.class));
-
-        for (GetCommentDTO commentDTO : commentsDTO) {
-            commentDTO.setUser(userMap.get(commentDTO.getUser().getId()));
-        }
+        Page<GetCommentDTO> commentsDTO = comments.map(comment -> {
+            GetCommentDTO dto = modelMapper.map(comment, GetCommentDTO.class);
+            if (userMap.containsKey(comment.getUserId())) {
+                dto.setUser(userMap.get(comment.getUserId()));
+            }
+            return dto;
+        });
 
         return ResponseEntity.status(HttpStatus.OK)
-                
                 .body(commentsDTO);
     }
 

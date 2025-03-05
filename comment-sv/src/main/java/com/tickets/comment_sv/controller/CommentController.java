@@ -38,7 +38,7 @@ public class CommentController {
     @GetMapping("/requirement/{requirementId}")
     public ResponseEntity<Page<GetCommentDTO>> getAllCommentsForRequirement(@PathVariable Long requirementId,
                                                                             @PageableDefault(sort = "createdAt",
-                                                                                    direction = Sort.Direction.DESC) @MaxFileListSize Pageable pageable) {
+                                                                                    direction = Sort.Direction.DESC) Pageable pageable) {
         return commentService.getAllCommentsForRequirement(requirementId, pageable);
     }
 
