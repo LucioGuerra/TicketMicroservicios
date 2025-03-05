@@ -43,7 +43,7 @@ public class CommentService {
             throw new TicketException("USER_NOT_EXIST", "User not found with id: " + commentDTO.getUserId());
         }
 
-        if (commentService.validateRequirementById(commentDTO.getRequirementId())) {
+        if (!commentService.validateRequirementById(commentDTO.getRequirementId())) {
             throw new TicketException("REQUIREMENT_NOT_FOUND", "Requirement not found");
         }
 
