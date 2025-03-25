@@ -5,7 +5,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-@FeignClient(name = "requirement-sv")
+@FeignClient(name = "requirement-sv", url = "http://requirement-svc:8080")
 public interface RequirementRepository {
     @GetMapping("/api/requirements/{id}")
     Requirement getRequirementById(@PathVariable Long id);

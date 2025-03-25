@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Optional;
 
-@FeignClient(name = "user-sv", fallbackFactory = OutsideUserFallback.class)
+@FeignClient(name = "user-sv",
+        url = "http://user-svc:8080",
+        fallbackFactory = OutsideUserFallback.class)
 public interface OutsideUserRepository {
 
     @GetMapping("/api/v1/outside-users/{id}")

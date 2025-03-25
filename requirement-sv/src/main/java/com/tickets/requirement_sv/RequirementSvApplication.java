@@ -7,7 +7,6 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication(scanBasePackages = "com.tickets")
 @EnableFeignClients
-@EnableDiscoveryClient
 public class RequirementSvApplication {
 
 	public static void main(String[] args) {

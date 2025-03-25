@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
-@FeignClient(name = "type-sv")
+@FeignClient(name = "type-sv", url = "http://type-svc:8080")
 public interface TypeRepository {
 
     @GetMapping("/api/types/{id}")
