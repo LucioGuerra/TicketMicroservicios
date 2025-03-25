@@ -1,7 +1,6 @@
 package com.tickets.traceability_sv.configuration;
 
 import jakarta.annotation.PostConstruct;
-import org.apache.hc.core5.http.io.HttpFilterChain;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
